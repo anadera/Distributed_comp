@@ -1,3 +1,4 @@
+#include "ipc.h"
 /** Send a message to the process specified by id.
  *
  * @param self    Any data structure implemented by students to perform I/O
