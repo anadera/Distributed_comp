@@ -140,10 +140,12 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	pid_t i, j;
 	int size = p->x;
 	int array_dc[size]; //array of id of determinated children
-	int id = p->id;
-	for (i=1; i<size; i++){
+	int id = 0;
+	for (i=0; i<size; i++){
 		if ((pids[i] = fork()) == 0) {
 			/* Child process */
+			p->id = i+1;
+			id = i+1;
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
 			log_pipes(p_fd_fmt,i,p->fd[i][0],p->fd[i][1], (FILE*)dpl);
