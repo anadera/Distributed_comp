@@ -157,7 +157,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			child_step3(p);
 			exit(EXIT_SUCCESS);
 		}
-		else if ((pids[i] = fork()) == -1){
+		else if (pids[i] == -1){
 			/* Fail process */
 			perror("create_process:child");
 			return FAILURE;
@@ -167,7 +167,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	/* Parent process */
 
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
-	for(j=0;j<=p->x;j++){
+	for(j=0;j<=size;j++){
 		if (j==id) continue;
 		log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], (FILE *)dpl);
 	}
@@ -186,8 +186,7 @@ int main(int argc, char* argv[]){
 	int pipes_num; //number of pipes
 	x = parse_x(argv); //works fine
 	pid_t pid[x]; //array of children' pids
-	N = x + 1;
-	pipes_num = N*(N-1);
+	pipes_num = x*(x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
 	p->x=x;
