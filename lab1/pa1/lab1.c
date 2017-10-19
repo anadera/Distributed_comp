@@ -190,8 +190,8 @@ int main(int argc, char* argv[]){
 	p->x=x;
 	p->id = PARENT_ID;
 
-	static const FILE* const des_events_log = fopen(events_log, "w+");
-	static const FILE* const des_pipes_log = fopen(pipes_log, "w+");
+	des_events_log = fopen(events_log, "w+");
+	des_pipes_log = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	if (create_child(fds,pid,p) == SUCCESS){
