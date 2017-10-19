@@ -61,13 +61,12 @@ int receive(void * self, local_id from, Message * msg){
 	int file_size = 0;
 	int fd = p->fd[from][0];
 	int read_bytes = read(fd, msg, block);
-	while(read_bytes > 0) {
-        file_size += read_bytes;
-    }
-    if (file_size > 0)
-		return SUCCESS;
-	else
+	if (read_bytes < 0){}
+		perror("receive:read-bytes");
 		return FAILURE;
+	}
+	else
+		return SUCCESS;
 }
 
 /** Receive a message from any process.
