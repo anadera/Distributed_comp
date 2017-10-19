@@ -104,7 +104,7 @@ void child_step1(PROCESS* p){
 	int num = p->x;
 	log_events(log_started_fmt,self, des_events_log);
 	create_msg(msg,STARTED,log_started_fmt);
-	send_multicast(self, msg);
+	send_multicast(self, &msg);
 
 	while(num > 0){
 		if (num != self)
@@ -123,7 +123,7 @@ void child_step3(PROCESS* p){
 	int num = p->x;
 	log_events(log_done_fmt,self, des_events_log);
 	create_msg(msg,DONE,log_done_fmt);
-	send_multicast((void*)p,msg);
+	send_multicast((void*)self,&msg);
 
 	while(num > 0){
 		if (num != self)
