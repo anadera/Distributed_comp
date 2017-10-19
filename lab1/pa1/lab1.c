@@ -120,7 +120,7 @@ void child_step3(PROCESS* p, FILENAME * f){
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
-	log_events(log_done_fmt,self, (FILE*)del);
+	log_events(log_done_fmt,self, f->events);
 	create_msg(msg,DONE,log_done_fmt);
 	send_multicast((void*)p,&msg);
 
