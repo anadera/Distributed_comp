@@ -69,7 +69,7 @@ int wait_child(int* array, PROCESS* p){
 	return SUCCESS;
 }
 
-void parent_step1(PROCESS* p){
+void parent_step1(PROCESS* p, FILENAME* f){
 	Message msg = { {0} };;
 	int self = p->id;
 	int num = p->x;
@@ -78,12 +78,12 @@ void parent_step1(PROCESS* p){
 			while(receive((void*)p,num,&msg) != 0);
 		num--;
 	}
-	log_events(log_received_all_started_fmt,self, (FILE *)del);
+	log_events(log_received_all_started_fmt,self, f->events);
 }
 
 //void parent_step2(){}
 
-void parent_step3(PROCESS* p){
+void parent_step3(PROCESS* p, FILENAME * f){
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -93,15 +93,15 @@ void parent_step3(PROCESS* p){
 		}
 		num--;
 	}
-	log_events(log_received_all_done_fmt,self, (FILE *)del);
+	log_events(log_received_all_done_fmt,self, f->events);
 }
 
-void child_step1(PROCESS* p){
+void child_step1(PROCESS* p, FILENAME* f){
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
-	log_events(log_started_fmt,self, (FILE*)del);
+	log_events(log_started_fmt,self, f->events);
 	create_msg(msg,STARTED,log_started_fmt);
 	send_multicast((void*)p, &msg);
 
@@ -110,12 +110,12 @@ void child_step1(PROCESS* p){
 			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
-	log_events(log_received_all_started_fmt,self, (FILE*)del);
+	log_events(log_received_all_started_fmt,self, f->events);
 }
 
 /* void child_step2(){} */
 
-void child_step3(PROCESS* p){
+void child_step3(PROCESS* p, FILENAME * f){
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
 	int self = p->id;
@@ -129,14 +129,14 @@ void child_step3(PROCESS* p){
 			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
-	log_events(log_received_all_done_fmt,self, (FILE*)del);
+	log_events(log_received_all_done_fmt,self, f->events);
 }
 
 /*
 size - number of children
 array - point on array with children pids
 */
-int create_child(int array[][2], pid_t* pids, PROCESS* p){
+int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	pid_t i, j;
 	int size = p->x;
 	int array_dc[size]; //array of id of determinated children
@@ -150,11 +150,11 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
 			for (j=0;j<=size;j++){
 				if (j==id) continue;
-				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], (FILE*)dpl);
+				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			child_step1(p);
+			child_step1(p, f);
 			//child_step2();
-			child_step3(p);
+			child_step3(p, f);
 			exit(EXIT_SUCCESS);
 		}
 		else if (pids[i] == -1){
@@ -169,19 +169,20 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 	for(j=0;j<=size;j++){
 		if (j==id) continue;
-		log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], (FILE *)dpl);
+		log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 	}
 
-	parent_step1(p);
+	parent_step1(p, f);
 	//parent_step2();
-	parent_step3(p);
+	parent_step3(p, f);
 	return (wait_child(array_dc,p));
 
 }
 
 int main(int argc, char* argv[]){
 	PROCESS * p;
-	int x; //number of child processes	
+	FILENAME * f;
+	int x; //number of child processes
 	int pipes_num; //number of pipes
 	x = parse_x(argv); //works fine
 	pid_t pid[x]; //array of children' pids
@@ -191,14 +192,11 @@ int main(int argc, char* argv[]){
 	p->x=x;
 	p->id = 0;
 
-	FILE * des_events_log = fopen(events_log, "w+");
-	del = &des_events_log;
-	FILE * des_pipes_log = fopen(pipes_log, "w+");
-	dpl = &des_pipes_log;
-
+	f->events = fopen(events_log, "w+");
+	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	if (create_child(fds,pid,p) == SUCCESS){
+	if (create_child(fds,pid,p,f) == SUCCESS){
 		fclose(des_events_log);
 		fclose(des_pipes_log);
 		free((void*)p);

@@ -23,13 +23,18 @@ typedef struct p{
 	int fd[][2];
 } PROCESS;
 
+typedef struct f{
+  FILE * events;
+  FILE * pipes;
+} FILENAME;
+
 void create_pipe(int size, int array[][2]);
 void set_fd(int array[][2], PROCESS * p);
 int wait_child(int* array, PROCESS* p);
-void parent_step1(PROCESS* p);
-void parent_step3(PROCESS* p);
-void child_step1(PROCESS* p);
-void child_step3(PROCESS* p);
-int create_child(int array[][2], pid_t* pids, PROCESS* p);
+void parent_step1(PROCESS* p, FILENAME* f);
+void parent_step3(PROCESS* p, FILENAME* f);
+void child_step1(PROCESS* p, FILENAME * f);
+void child_step3(PROCESS* p, FILENAME * f);
+int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME* f);
 
 #endif
