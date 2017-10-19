@@ -31,7 +31,7 @@ void create_msg(Message msg, MessageType type, const char * const body){
 		.s_payload_len = strlen(body),
 		.s_type = type,
 		.s_local_time = time(0)
-	}
+	};
 	strcpy(msg.s_payload, body);
 }
 
