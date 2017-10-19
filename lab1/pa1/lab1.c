@@ -177,7 +177,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	//parent_step2();
 	parent_step3(p, f);
 	for (int k = 0; k<p->x; k++){
-		waitpid(pids[k], NULL,0)
+		waitpid(pids[k], NULL,0);
 	}
 	return SUCCESS;
 }
