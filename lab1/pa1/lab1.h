@@ -17,7 +17,7 @@ static const char * const p_fd_fmt =
 typedef struct p{
 	int id;
 	int x;
-	int *fd[][2];
+	int fd[][2];
 } PROCESS;
 
 void create_pipe(int size, int array[][2]);

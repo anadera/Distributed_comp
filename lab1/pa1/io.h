@@ -11,6 +11,6 @@
 
 int parse_x(char** argv);
 void create_msg(Message msg, MessageType type, const char * const body);
-void log_events(const char * const fmt, int self, int des);
+void log_events(const char * const fmt, int self, FILE* des);
 
 #endif
