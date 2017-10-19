@@ -1,6 +1,7 @@
 #ifndef __IO_H__
 #define __IO_H__
 
+#include "ipc.h"
 #include <stdlib.h> //atoi exit
 #include <string.h> //strcpy strcmp strlen
 #include <stdio.h> //perror printf fprintf
