@@ -9,11 +9,14 @@
  *
  * @return 0 on success, any non-zero value on error
  */
+
+ const int block = 8192; //64 Kbit
+
 int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
-	int count = strlen(msg);
-	int fd = p->fd[dst][1];
-	if (write(fd, msg, count) <0){
+	//int count = strlen(msg);
+	int fd = &(p->fd[dst][1]);
+	if (write(fd, msg, block) <0){
 		perror("send");
 		return FAILURE;
 	}
@@ -34,7 +37,7 @@ int send(void * self, local_id dst, const Message * msg){
 int send_multicast(void * self, const Message * msg){
 	int i;
 	PROCESS *p = (PROCESS*)self;
-	int count = strlen(msg);
+	//int count = strlen(msg);
 	int size = p->x;
 	for (i=0; i<=size; i++){
 		send((void*)p,i,msg);
@@ -53,12 +56,10 @@ int send_multicast(void * self, const Message * msg){
  * @return 0 on success, any non-zero value on error
  */
 
-const int block = 8192; //64 Kbit
-
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	int file_size;
-	int fd = p->fds[from][0];
+	int fd = &(p->fd[from][0]);
 	while((int read_bytes = read(p->fd, msg, block)) > 0) {
         file_size += read_bytes;
     }
