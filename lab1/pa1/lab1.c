@@ -197,8 +197,8 @@ int main(int argc, char* argv[]){
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	if (create_child(fds,pid,p,f) == SUCCESS){
-		fclose(des_events_log);
-		fclose(des_pipes_log);
+		fclose(f->events);
+		fclose(f->pipes);
 		free((void*)p);
 		exit(EXIT_SUCCESS);
 	}

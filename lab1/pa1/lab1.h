@@ -14,9 +14,6 @@
 static const char * const p_fd_fmt =
     "Process %1d (pid %5d, parent %5d) has READ fd %5d and WRITE fd %5d \n";
 
-const void* del;
-const void* dpl;
-
 typedef struct p{
 	int id;
 	int x;
