@@ -88,8 +88,10 @@ void parent_step3(PROCESS* p){
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
-		if (num != self)
+		if (num != self){
+			Message msg;
 			while(receive((void*)p,num,&msg) != 0);
+		}
 		num--;
 	}
 	log_events(log_received_all_done_fmt,self, des_events_log);
@@ -98,7 +100,7 @@ void parent_step3(PROCESS* p){
 void child_step1(PROCESS* p){
 	Message msg;
 	Message msgIN;
-`	int self = p->id;
+	int self = p->id;
 	int num = p->x;
 	log_events(log_started_fmt,self, des_events_log);
 	create_msg(msg,STARTED,log_started_fmt);
@@ -121,7 +123,7 @@ void child_step3(PROCESS* p){
 	int num = p->x;
 	log_events(log_done_fmt,self, des_events_log);
 	create_msg(msg,DONE,log_done_fmt);
-	send_multicast((void*)p,log_done_fmt);
+	send_multicast((void*)p,msg);
 
 	while(num > 0){
 		if (num != self)
@@ -145,14 +147,14 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			/* Child process */
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
-			log_events(p_fd_fmt,i,getpid(),getppid(),p.fd[i][0],p.fd[i][1], des_pipes_log);
+			log_events(p_fd_fmt,i,getpid(),getppid(),p->fd[i][0],p->fd[i][1], des_pipes_log);
 
 			child_step1(p);
 			//child_step2();
 			child_step3(p);
 			exit(EXIT_SUCCESS);
 		}
-		else ((pids[i] = fork()) == -1){
+		else if ((pids[i] = fork()) == -1){
 			/* Fail process */
 			perror("create_process:child");
 			return FAILURE;
@@ -162,9 +164,9 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	/* Parent process */
 
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
-	for(j=0;j<=x;j++){
+	for(j=0;j<=p->x;j++){
 		if (j==id) continue;
-		log_events(p_fd_fmt,j,getpid(),getppid(),p.fd[j][0],p.fd[j][1], des_pipes_log);
+		log_events(p_fd_fmt,j,getpid(),getppid(),p->fd[j][0],p->fd[j][1], des_pipes_log);
 	}
 
 	parent_step1(p);
