@@ -197,13 +197,14 @@ int main(int argc, char* argv[]){
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	if (create_child(fds,pid,p,f) == SUCCESS){
+	int r = create_child(fds,pid,p,f);
+	//if (create_child(fds,pid,p,f) == SUCCESS){
 		fclose(f->events);
 		fclose(f->pipes);
 		free((void*)p);
 		free((void*)f);
-		exit(EXIT_SUCCESS);
-	}
-	else
-		exit(EXIT_FAILURE);
+		return r;
+	//}
+	//else
+	//	exit(EXIT_FAILURE);
 }
