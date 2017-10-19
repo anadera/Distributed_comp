@@ -14,8 +14,8 @@
 static const char * const p_fd_fmt =
     "Process %1d (pid %5d, parent %5d) has READ fd %5d and WRITE fd %5d \n";
 
-static const FILE* const des_events_log;
-static const FILE* const des_pipes_log;
+const void* del;
+const void* dpl;
 
 typedef struct p{
 	int id;

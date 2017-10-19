@@ -78,7 +78,7 @@ void parent_step1(PROCESS* p){
 			while(receive((void*)p,num,&msg) != 0);
 		num--;
 	}
-	log_events(log_received_all_started_fmt,self, des_events_log);
+	log_events(log_received_all_started_fmt,self, (FILE *)del);
 }
 
 //void parent_step2(){}
@@ -93,7 +93,7 @@ void parent_step3(PROCESS* p){
 		}
 		num--;
 	}
-	log_events(log_received_all_done_fmt,self, des_events_log);
+	log_events(log_received_all_done_fmt,self, (FILE *)del);
 }
 
 void child_step1(PROCESS* p){
@@ -101,7 +101,7 @@ void child_step1(PROCESS* p){
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
-	log_events(log_started_fmt,self, des_events_log);
+	log_events(log_started_fmt,self, (FILE*)del);
 	create_msg(msg,STARTED,log_started_fmt);
 	send_multicast((void*)p, &msg);
 
@@ -110,7 +110,7 @@ void child_step1(PROCESS* p){
 			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
-	log_events(log_received_all_started_fmt,self, des_events_log);
+	log_events(log_received_all_started_fmt,self, (FILE*)del);
 }
 
 /* void child_step2(){} */
@@ -120,7 +120,7 @@ void child_step3(PROCESS* p){
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
-	log_events(log_done_fmt,self, des_events_log);
+	log_events(log_done_fmt,self, (FILE*)del);
 	create_msg(msg,DONE,log_done_fmt);
 	send_multicast((void*)p,&msg);
 
@@ -129,7 +129,7 @@ void child_step3(PROCESS* p){
 			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
-	log_events(log_received_all_done_fmt,self, des_events_log);
+	log_events(log_received_all_done_fmt,self, (FILE*)del);
 }
 
 /*
@@ -146,7 +146,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			/* Child process */
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
-			log_pipes(p_fd_fmt,i,p->fd[i][0],p->fd[i][1], des_pipes_log);
+			log_pipes(p_fd_fmt,i,p->fd[i][0],p->fd[i][1], (FILE*)dpl);
 
 			child_step1(p);
 			//child_step2();
@@ -165,7 +165,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 	for(j=0;j<=p->x;j++){
 		if (j==id) continue;
-		log_pipes(p_fd_fmt,j,p->fd[j][0],p->fd[j][1], des_pipes_log);
+		log_pipes(p_fd_fmt,j,p->fd[j][0],p->fd[j][1], (FILE *)dpl);
 	}
 
 	parent_step1(p);
@@ -190,8 +190,11 @@ int main(int argc, char* argv[]){
 	p->x=x;
 	p->id = PARENT_ID;
 
-	des_events_log = fopen(events_log, "w+");
-	des_pipes_log = fopen(pipes_log, "w+");
+	FILE * des_events_log = fopen(events_log, "w+");
+	del = &des_events_log;
+	FILE * des_pipes_log = fopen(pipes_log, "w+");
+	dpl = &des_pipes_log;
+
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	if (create_child(fds,pid,p) == SUCCESS){
