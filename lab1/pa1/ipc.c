@@ -58,15 +58,14 @@ int send_multicast(void * self, const Message * msg){
 
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
-	int file_size = 0;
 	int fd = p->fd[from][0];
 	int read_bytes = read(fd, msg, block);
-	if (read_bytes < 0){}
+	if (read_bytes < 0){
 		perror("receive:read-bytes");
 		return FAILURE;
 	}
 	else
-		return SUCCESS;
+		return SUCCESS;	
 }
 
 /** Receive a message from any process.
