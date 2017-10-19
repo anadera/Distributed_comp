@@ -44,6 +44,6 @@ des - descriptor of opened file
 void log_events(const char * const fmt, int self, int des){
 	if (printf(fmt,self,getpid(),getppid()) < 0)
 		perror("log_events:printf");	
-	if (fprintf(des,fmt,self,getpid(),getppid()) < 0)
+	if (fprintf((FILE*)des,fmt,self,getpid(),getppid()) < 0)
 		perror("log_events:fprintf");	
 }
