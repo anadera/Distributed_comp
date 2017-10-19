@@ -14,8 +14,8 @@ int parse_x(char** argv){
 			perror("parse_x:wrong X");
 			exit(EXIT_FAILURE);
 		}
-			
-	}	
+
+	}
 	else {
 		perror("parse_x:wrong key");
 		exit(EXIT_FAILURE);
@@ -25,7 +25,7 @@ int parse_x(char** argv){
 /*
 fill declared Message struct
 */
-void create_msg(Message msg, MessageType type, const char * const body){	
+void create_msg(Message msg, MessageType type, const char * const body){
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
 		.s_payload_len = strlen(body),
@@ -41,9 +41,9 @@ fmt - event_message
 self - local process id
 des - descriptor of opened file
 */
-void log_events(const char * const fmt, int self, int des){
+void log_events(const char * const fmt, int self, FILE* des){
 	if (printf(fmt,self,getpid(),getppid()) < 0)
-		perror("log_events:printf");	
+		perror("log_events:printf");
 	if (fprintf((FILE*)des,fmt,self,getpid(),getppid()) < 0)
-		perror("log_events:fprintf");	
+		perror("log_events:fprintf");
 }
