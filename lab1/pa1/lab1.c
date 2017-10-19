@@ -154,8 +154,10 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
 			child_step1(p, f);
+			printf ("child %d pid %d zavershil step 1", id, getpid());
 			//child_step2();
 			child_step3(p, f);
+			printf ("child %d pid %d zavershil step 3", id, getpid());
 			exit(EXIT_SUCCESS);
 		}
 		else if (pids[i] == -1){
@@ -174,12 +176,14 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	}
 
 	parent_step1(p, f);
+	printf ("parent %d pid %d zavershil step 1", id, getpid());
 	//parent_step2();
 	parent_step3(p, f);
+	printf ("parent %d pid %d zavershil step 3", id, getpid());
 	for (int k = 0; k<p->x; k++){
 		waitpid(pids[k], NULL,0);
 	}
-	printf ("ya vishel iz cikla");
+	printf ("parent zavershil cikl");
 	return SUCCESS;
 }
 
