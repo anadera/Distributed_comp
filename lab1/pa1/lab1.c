@@ -84,7 +84,7 @@ void parent_step1(PROCESS* p){
 //void parent_step2(){}
 
 void parent_step3(PROCESS* p){
-	Message mag = { {0} };;
+	Message msg = { {0} };;
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -139,8 +139,8 @@ array - point on array with children pids
 */
 int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	pid_t i, j;
-	int *array_dc; //array of id of determinated children
 	int size = p->x;
+	int array_dc[size] = NULL; //array of id of determinated children
 	int id = p->id;
 	for (i=1; i<=size; ++i){
 		if ((pids[i] = fork()) == 0) {
@@ -202,5 +202,5 @@ int main(int argc, char* argv[]){
 		exit(EXIT_SUCCESS);
 	}
 	else
-		exit(EXIt_FAILURE);
+		exit(EXIT_FAILURE);
 }
