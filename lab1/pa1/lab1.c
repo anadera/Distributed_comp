@@ -179,6 +179,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	for (int k = 0; k<p->x; k++){
 		waitpid(pids[k], NULL,0);
 	}
+	printf ("ya vishel iz cikla");
 	return SUCCESS;
 }
 
