@@ -148,8 +148,10 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			id = i+1;
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
-			log_pipes(p_fd_fmt,i,p->fd[i][0],p->fd[i][1], (FILE*)dpl);
-
+			for (j=0;j<=size;j++){
+				if (j==id) continue;
+				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], (FILE*)dpl);
+			}
 			child_step1(p);
 			//child_step2();
 			child_step3(p);
