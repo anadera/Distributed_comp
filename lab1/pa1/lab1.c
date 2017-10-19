@@ -60,14 +60,15 @@ size - number of children
 array - points on array of id of determinated children
 status - points on array of children statuses
 */
-int wait_child(int* array, PROCESS* p){
+/* int wait_child(int* array, PROCESS* p){
 	int size = p->x;
 	while (size > 0){
 		while ((array[size] = wait(NULL)) > 0);
 		size--;
 	}
+
 	return SUCCESS;
-}
+} */
 
 void parent_step1(PROCESS* p, FILENAME* f){
 	Message msg = { {0} };;
@@ -175,8 +176,10 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	parent_step1(p, f);
 	//parent_step2();
 	parent_step3(p, f);
-	return (wait_child(array_dc,p));
-
+	for (int k = 0; k<p->x; k++){
+		waitpid(pids[k], NULL,0)
+	}
+	return SUCCESS;
 }
 
 int main(int argc, char* argv[]){
