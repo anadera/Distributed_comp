@@ -141,7 +141,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	int size = p->x;
 	int array_dc[size]; //array of id of determinated children
 	int id = p->id;
-	for (i=0; i<size; i++){
+	for (i=1; i<size; i++){
 		if ((pids[i] = fork()) == 0) {
 			/* Child process */
 
@@ -187,7 +187,7 @@ int main(int argc, char* argv[]){
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
 	p->x=x;
-	p->id = PARENT_ID;
+	p->id = 0;
 
 	FILE * des_events_log = fopen(events_log, "w+");
 	del = &des_events_log;
