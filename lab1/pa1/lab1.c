@@ -70,7 +70,7 @@ int wait_child(int* array, PROCESS* p){
 }
 
 void parent_step1(PROCESS* p){
-	Message msg = NULL;
+	Message msg = { {0} };;
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -84,7 +84,7 @@ void parent_step1(PROCESS* p){
 //void parent_step2(){}
 
 void parent_step3(PROCESS* p){
-	Message mag = NULL;
+	Message mag = { {0} };;
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -98,8 +98,8 @@ void parent_step3(PROCESS* p){
 }
 
 void child_step1(PROCESS* p){
-	Message msg = NULL;
-	Message msgIN = NULL;
+	Message msg = { {0} };;
+	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
 	log_events(log_started_fmt,self, des_events_log);
@@ -117,8 +117,8 @@ void child_step1(PROCESS* p){
 /* void child_step2(){} */
 
 void child_step3(PROCESS* p){
-	Message msg = NULL;
-	Message msgIN = NULL;
+	Message msg = { {0} };;
+	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
 	log_events(log_done_fmt,self, des_events_log);
@@ -195,13 +195,12 @@ int main(int argc, char* argv[]){
 	static const FILE* const des_pipes_log = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	if (create_child(fds,pid,p) == SUCCESS)
-		if (fclose(des_events_log))
-			perror("close(des_events_log)");
-		if (fclose(des_pipes_log))
-			perror("close(des_pipes_log)");
+	if (create_child(fds,pid,p) == SUCCESS){
+		fclose(des_events_log);
+		fclose(des_pipes_log);
 		free((void*)p);
 		exit(EXIT_SUCCESS);
+	}
 	else
 		exit(EXIt_FAILURE);
 }
