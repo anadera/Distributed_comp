@@ -6,6 +6,8 @@
 #include <string.h> //strcpy strcmp strlen
 #include <stdio.h> //perror printf fprintf
 #include <time.h> //time
+#include <unistd.h> //getpid getppid
+#include <sys/types.h> //getpid getppid
 
 int parse_x(char** argv);
 void create_msg(Message msg, MessageType type, const char * const body);
