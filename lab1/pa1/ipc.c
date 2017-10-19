@@ -58,9 +58,9 @@ int send_multicast(void * self, const Message * msg){
 
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
-	int file_size;
+	int file_size = 0;
 	int fd = p->fd[from][0];
-	int read_bytes = read(p->fd, msg, block);
+	int read_bytes = read(fd, msg, block);
 	while(read_bytes > 0) {
         file_size += read_bytes;
     }
