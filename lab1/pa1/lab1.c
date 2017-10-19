@@ -189,6 +189,7 @@ int main(int argc, char* argv[]){
 	pipes_num = x*(x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
+	f = (FILENAME *)malloc(sizeof(FILENAME));
 	p->x=x;
 	p->id = 0;
 
@@ -200,6 +201,7 @@ int main(int argc, char* argv[]){
 		fclose(f->events);
 		fclose(f->pipes);
 		free((void*)p);
+		free((void*)f);
 		exit(EXIT_SUCCESS);
 	}
 	else
