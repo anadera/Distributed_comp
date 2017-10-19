@@ -35,16 +35,16 @@ void set_fd(int array[][2], PROCESS * p){
 		if (i/x == id) {		//READ fds
 			if(i%x == id)
 				skip = 1;
-			p->fd[i%x+skip][0] = &(array[i][0]);
+			p->fd[i%x+skip][0] = array[i][0];
 			close(array[i][1]);
 		}
 		else if (i/x != id){	//WRITE fds
 			if(i/x < id && i%x+1 == id){
-				p->fd[i/x][1] = &(array[i][1]);
+				p->fd[i/x][1] = array[i][1];
 				close(array[i][0]);
 			}
 			else if (i/x > id && i%x == id){
-				p->fd[i/x][1] = &(array[i][1]);
+				p->fd[i/x][1] = array[i][1];
 				close(array[i][0]);
 			}
 			else {
@@ -75,7 +75,7 @@ void parent_step1(PROCESS* p){
 	int num = p->x;
 	while(num > 0){
 		if (num != self)
-			while(receive((void*)p,num,msg) != 0);
+			while(receive((void*)p,num,&msg) != 0);
 		num--;
 	}
 	log_events(log_received_all_started_fmt,self, des_events_log);
@@ -89,7 +89,7 @@ void parent_step3(PROCESS* p){
 	int num = p->x;
 	while(num > 0){
 		if (num != self)
-			while(receive((void*)p,num,msg) != 0);
+			while(receive((void*)p,num,&msg) != 0);
 		num--;
 	}
 	log_events(log_received_all_done_fmt,self, des_events_log);
@@ -106,7 +106,7 @@ void child_step1(PROCESS* p){
 
 	while(num > 0){
 		if (num != self)
-			while(receive((void*)p,num,msgIN) != 0);
+			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
 	log_events(log_received_all_started_fmt,self, des_events_log);
@@ -125,7 +125,7 @@ void child_step3(PROCESS* p){
 
 	while(num > 0){
 		if (num != self)
-			while(receive((void*)p,num,msgIN) != 0);
+			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 	}
 	log_events(log_received_all_done_fmt,self, des_events_log);
@@ -194,9 +194,9 @@ int main(int argc, char* argv[]){
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	if (create_child(fds,pid,p) == SUCCESS)
-		if (close(des_events_log))
+		if (fclose(des_events_log))
 			perror("close(des_events_log)");
-		if (close(des_pipes_log))
+		if (fclose(des_pipes_log))
 			perror("close(des_pipes_log)");
 		free((void*)p);
 		exit(EXIT_SUCCESS);

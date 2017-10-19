@@ -15,7 +15,7 @@
 int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
-	int fd = &(p->fd[dst][1]);
+	int fd = p->fd[dst][1];
 	if (write(fd, msg, block) <0){
 		perror("send");
 		return FAILURE;
@@ -59,8 +59,9 @@ int send_multicast(void * self, const Message * msg){
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	int file_size;
-	int fd = &(p->fd[from][0]);
-	while((int read_bytes = read(p->fd, msg, block)) > 0) {
+	int fd = p->fd[from][0];
+	int read_bytes = read(p->fd, msg, block);
+	while(read_bytes > 0) {
         file_size += read_bytes;
     }
     if (file_size > 0)
