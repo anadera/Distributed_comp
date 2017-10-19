@@ -70,7 +70,7 @@ int wait_child(int* array, PROCESS* p){
 }
 
 void parent_step1(PROCESS* p){
-	Message msg;
+	Message msg = NULL;
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -84,7 +84,7 @@ void parent_step1(PROCESS* p){
 //void parent_step2(){}
 
 void parent_step3(PROCESS* p){
-	Message mag;
+	Message mag = NULL;
 	int self = p->id;
 	int num = p->x;
 	while(num > 0){
@@ -98,13 +98,13 @@ void parent_step3(PROCESS* p){
 }
 
 void child_step1(PROCESS* p){
-	Message msg;
-	Message msgIN;
+	Message msg = NULL;
+	Message msgIN = NULL;
 	int self = p->id;
 	int num = p->x;
 	log_events(log_started_fmt,self, des_events_log);
 	create_msg(msg,STARTED,log_started_fmt);
-	send_multicast(self, &msg);
+	send_multicast((void*)p, &msg);
 
 	while(num > 0){
 		if (num != self)
@@ -117,13 +117,13 @@ void child_step1(PROCESS* p){
 /* void child_step2(){} */
 
 void child_step3(PROCESS* p){
-	Message msg;
-	Message msgIN;
+	Message msg = NULL;
+	Message msgIN = NULL;
 	int self = p->id;
 	int num = p->x;
 	log_events(log_done_fmt,self, des_events_log);
 	create_msg(msg,DONE,log_done_fmt);
-	send_multicast((void*)self,&msg);
+	send_multicast((void*)p,&msg);
 
 	while(num > 0){
 		if (num != self)
@@ -147,7 +147,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 			/* Child process */
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
-			log_events(p_fd_fmt,i,getpid(),getppid(),p->fd[i][0],p->fd[i][1], des_pipes_log);
+			log_pipes(p_fd_fmt,i,p->fd[i][0],p->fd[i][1], des_pipes_log);
 
 			child_step1(p);
 			//child_step2();
@@ -166,7 +166,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 	for(j=0;j<=p->x;j++){
 		if (j==id) continue;
-		log_events(p_fd_fmt,j,getpid(),getppid(),p->fd[j][0],p->fd[j][1], des_pipes_log);
+		log_pipes(p_fd_fmt,j,p->fd[j][0],p->fd[j][1], des_pipes_log);
 	}
 
 	parent_step1(p);
@@ -191,8 +191,8 @@ int main(int argc, char* argv[]){
 	p->x=x;
 	p->id = PARENT_ID;
 
-	static FILE* des_events_log = fopen(events_log, w+);
-	static FILE* des_pipes_log = fopen(pipes_log, w+);
+	static const FILE* const des_events_log = fopen(events_log, "w+");
+	static const FILE* const des_pipes_log = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	if (create_child(fds,pid,p) == SUCCESS)
