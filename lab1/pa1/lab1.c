@@ -140,7 +140,7 @@ array - point on array with children pids
 int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	pid_t i, j;
 	int size = p->x;
-	int array_dc[size]; //array of id of determinated children
+	//int array_dc[size]; //array of id of determinated children
 	int id = 0;
 	for (i=0; i<size; i++){
 		if ((pids[i] = fork()) == 0) {
