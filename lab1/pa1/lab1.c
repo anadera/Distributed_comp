@@ -179,10 +179,9 @@ int main(int argc, char* argv[]){
 	PROCESS * p;
 	int x; //number of child processes
 	int N; // children+parent
-	int pipes_num; //number of pipes
-
-	pid_t pid[x]; //array of children' pids
+	int pipes_num; //number of pipes	
 	x = parse_x(argv); //works fine
+	pid_t pid[x]; //array of children' pids
 	N = x + 1;
 	pipes_num = N*(N-1);
 	int fds[pipes_num][2]; //array of pipes' fds
