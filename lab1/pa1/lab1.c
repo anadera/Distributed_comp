@@ -141,7 +141,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p){
 	int size = p->x;
 	int array_dc[size]; //array of id of determinated children
 	int id = p->id;
-	for (i=1; i<=size; ++i){
+	for (i=1; i<=size; i++){
 		if ((pids[i] = fork()) == 0) {
 			/* Child process */
 
@@ -179,7 +179,7 @@ int main(int argc, char* argv[]){
 	PROCESS * p;
 	int x; //number of child processes
 	int N; // children+parent
-	int pipes_num; //number of pipes	
+	int pipes_num; //number of pipes
 	x = parse_x(argv); //works fine
 	pid_t pid[x]; //array of children' pids
 	N = x + 1;
