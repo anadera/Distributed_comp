@@ -7,6 +7,7 @@
 #include <stdlib.h> //malloc exit atoi free
 #include <stdio.h> //perror
 #include <time.h> //time
+#include <errno.h>
 //#include <string.h> //strcmp
 #define SUCCESS  0
 #define FAILURE -1
