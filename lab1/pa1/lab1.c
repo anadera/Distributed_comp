@@ -174,13 +174,13 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			//child_step2();
 			child_step3(p, f);
 			printf ("child %d pid %d zavershil step 3\n", id, getpid());
-			exit(EXIT_SUCCESS);
+			exit(0);
 		}
 
 		else if (pids[i] < 0) {
 			/* Fail process */
 			perror("create_process:child");
-			return FAILURE;
+			exit(1);
 		}
 	}
 
@@ -196,7 +196,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	parent_step1(p, f);
 	parent_step3(p, f);
 
-	for (int i=1; i<size; i++){
+	for (int i=0; i<size; i++){
 		waitpid(pids[i], NULL,0);
 		i--;
 	}
