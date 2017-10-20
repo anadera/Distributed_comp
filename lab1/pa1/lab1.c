@@ -76,8 +76,8 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	int self = p->id;
 	int size = p->x;
 	FILE * des = f->events;
-	printf ("parent: self = %d, num = %d\n step1", self, num);
-	for (num=1; num<=size; num++){
+	printf ("parent: self = %d, num = %d\n step1", self, size);
+	for (int num=1; num<=size; num++){
 		//if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
 	}
@@ -92,7 +92,7 @@ void parent_step3(PROCESS* p, FILENAME * f){
 	int size = p->x;
 	FILE * des = f->events;
 	Message msg = { {0} };
-	printf ("parent: self = %d, num = %d\n step3", self, num);
+	printf ("parent: self = %d, num = %d\n step3", self, size);
 	for (int num=1; num<=size; num++){
 		//if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
