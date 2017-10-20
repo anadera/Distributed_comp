@@ -109,7 +109,7 @@ void child_step1(PROCESS* p, FILENAME* f){
 	int num = p->x;
 	printf ("child: self = %d, num = %d\n step1", self, num);
 	log_events(log_started_fmt,self, f->events);
-	create_msg(msg,STARTED,log_started_fmt);
+	create_msg(msg,STARTED,log_started_fmt, self);
 	printf ("child step1 msg was created: %s\n", msg.s_payload);
 	send_multicast((void*)p, &msg);
 	printf ("send multi was done\n");
@@ -132,7 +132,7 @@ void child_step3(PROCESS* p, FILENAME * f){
 	int num = p->x;
 	printf ("child: self = %d, num = %d\n step3", self, num);
 	log_events(log_done_fmt,self, f->events);
-	create_msg(msg,DONE,log_done_fmt);
+	create_msg(msg,DONE,log_done_fmt, self);
 	send_multicast((void*)p,&msg);
 
 	while(num > 0){
