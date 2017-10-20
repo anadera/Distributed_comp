@@ -145,8 +145,8 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	for (i=0; i<size; i++){
 		if ((pids[i] = fork()) == 0) {
 			/* Child process */
-			p->id = i+1;
-			id = i+1;
+			//p->id = i+1;
+			//id = i+1;
 
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
 			for (j=0;j<=size;j++){
@@ -158,6 +158,8 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			//child_step2();
 			child_step3(p, f);
 			printf ("child %d pid %d zavershil step 3", id, getpid());
+			p->id = i+1;
+			id = i+1;
 			exit(EXIT_SUCCESS);
 		}
 		else if (pids[i] == -1){
@@ -168,7 +170,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 		else {
 			/* Parent process */
-		
+
 			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 			for(j=0;j<=size;j++){
 				if (j==id) continue;
