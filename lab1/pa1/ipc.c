@@ -16,7 +16,7 @@ int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
 	int fd = p->fd[dst][1];
-	if (write(fd, msg, strlen(msg->body)) <0){
+	if (write(fd, msg, strlen(msg->s_payload)) <0){
 		perror("send");
 		return FAILURE;
 	}
