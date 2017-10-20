@@ -25,14 +25,22 @@ int parse_x(char** argv){
 /*
 fill declared Message struct
 */
-void create_msg(Message msg, MessageType type, const char * const body){
+void create_msg(Message msg, MessageType type, const char * const body, int id){
+	char tmp[MAX_PAYLOAD_LEN];
+	size_t buf;
+	switch(body){
+		case log_started_fmt:
+			buf = sprintf(tmp, body, id, getpid(), getppid());
+		default:
+			buf = sprintf(tmp, body, id);
+	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
 		.s_payload_len = strlen(body),
 		.s_type = type,
 		.s_local_time = time(0)
 	};
-	strcpy(msg.s_payload, body);
+	strncpy(msg.s_payload, tmp, buf);
 }
 
 /*
