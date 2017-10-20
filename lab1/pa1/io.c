@@ -37,7 +37,7 @@ void create_msg(Message msg, MessageType type, const char * const body, int id){
 	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
-		.s_payload_len = strlen(body),
+		.s_payload_len = buf,
 		.s_type = type,
 		.s_local_time = time(0)
 	};
