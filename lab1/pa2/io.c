@@ -4,23 +4,36 @@
 
 /*
 parse command line arguments
-return X from "./lab2 -p X"
+return array from "./lab2 -p X array[0] array[1] ..."
 */
-int parse_x(char** argv){
+int * parse_x(int argc, char** argv){
 	int d;
-	if(!strcmp(argv[1], "-p")){
-		if ((d = atoi(argv[2]))>0 && (d = atoi(argv[2])) <=10)
-			return d;
-		else {
+    if(!strcmp(argv[1], "-p")){
+		if (!
+		  ((d = atoi(argv[2]))>1 &&
+		  d <=10 && d == (argc-3))
+		   )
+		{
 			perror("parse_x:wrong X");
 			exit(EXIT_FAILURE);
 		}
-
 	}
 	else {
-		perror("parse_x:wrong key");
-		exit(EXIT_FAILURE);
-  }
+		printf("parse_x:wrong key");
+		exit(-1);
+    }
+    int * array = (int*)malloc(sizeof(int)*d);
+	for (int i=0; i<d; i++){
+	    if (!
+	    ((array[i] = atoi(argv[i+3])) > 0) &&
+	    ((array[i] = atoi(argv[i+3])) <=99)
+	    )
+	    {
+	        perror("parse_x:wrong sum");
+			exit(EXIT_FAILURE);
+	    }
+	}
+    return array;
 }
 
 /*
