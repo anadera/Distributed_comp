@@ -224,7 +224,8 @@ int main(int argc, char* argv[]){
 	int x; //number of child processes
 	int pipes_num; //number of pipes
 	x = parse_x(argv); //works fine
-	pid_t pid[x] = NULL; //array of children' pids
+	pid_t pid[x]; //array of children' pids
+	pid[x] = (pid_t *)malloc(sizeof(pid_t)*x);
 	pipes_num = x*(x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
@@ -242,6 +243,7 @@ int main(int argc, char* argv[]){
 		fclose(f->pipes);
 		free((void*)p);
 		free((void*)f);
+		free((void*)pid);
 		return r;
 	//}
 	//else
