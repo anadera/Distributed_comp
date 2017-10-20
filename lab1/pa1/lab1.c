@@ -75,13 +75,14 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	Message msg = { {0} };;
 	int self = p->id;
 	int num = p->x;
+	FILE * des = f->events;
 	printf ("parent: self = %d, num = %d\n step1", self, num);
 	while(num > 0){
 		if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
 		num--;
 	}
-	log_events(log_received_all_started_fmt,self, (FILE *)f->events);
+	log_events(log_received_all_started_fmt,self, des);
 }
 
 //void parent_step2(){}
@@ -90,25 +91,26 @@ void parent_step3(PROCESS* p, FILENAME * f){
 	printf("parent step3\n");
 	int self = p->id;
 	int num = p->x;
+	FILE * des = f->events;
+	Message msg = { {0} };
 	printf ("parent: self = %d, num = %d\n step3", self, num);
 	while(num > 0){
-		if (num != self){
-			Message msg = { {0} };
+		if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
-		}
 		num--;
 	}
-	log_events(log_received_all_done_fmt,self, (FILE *)f->events);
+	log_events(log_received_all_done_fmt,self, des);
 }
 
 void child_step1(PROCESS* p, FILENAME* f){
 	printf("child step1\n");
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
+	FILE * des = f->events;
 	int self = p->id;
 	int num = p->x;
 	printf ("child: self = %d, num = %d step1\n", self, num);
-	log_events(log_started_fmt,self, (FILE *)f->events);
+	log_events(log_started_fmt,self, des);
 	create_msg(msg,STARTED,log_started_fmt, self);
 	send_multicast((void*)p, (const Message *)&msg);
 	printf ("child %d sent STARTED\n", getpid());
@@ -119,29 +121,30 @@ void child_step1(PROCESS* p, FILENAME* f){
 		num--;
 		printf("dec num as child %d received STARTED, num = %d\n", getpid(), num);
 	}
-	log_events(log_received_all_started_fmt,self, (FILE *)f->events);
+	log_events(log_received_all_started_fmt,self, des);
 }
 
 /* void child_step2(){} */
 
-void child_step3(PROCESS* p, FILENAME * f){
+void child_step3(PROCESS* p, FILENAME* f){
 	printf("child step3\n");
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
+	FILE * des = f->events;
 	printf ("child: self = %d, num = %d step3\n", self, num);
-	log_events(log_done_fmt,self, (FILE *)f->events);
+	log_events(log_done_fmt,self, des);
 	create_msg(msg,DONE,log_done_fmt, self);
 	send_multicast((void*)p,(const Message *)&msg);
 	printf ("child %d sent DONE\n", getpid());
 	while(num > 0){
 		if (num != self)
-			while(receive((void*)p,num,&msgIN) != 0);			}
+			while(receive((void*)p,num,&msgIN) != 0);
 		num--;
 		printf("dec num as child %d received DONE, num = %d\n", getpid(), num);
 	}
-	log_events(log_received_all_done_fmt,self, (FILE *)f->events);
+	log_events(log_received_all_done_fmt,self, des);
 }
 
 /*
