@@ -55,6 +55,8 @@ int send_multicast(void * self, const Message * msg){
 
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
+  if (p->id == from)
+    return -1;
 	int fd = p->fd[from][0];
 	int read_bytes = read(fd, msg, sizeof(Message));
 	if (read_bytes < 0 && errno != EAGAIN) {
