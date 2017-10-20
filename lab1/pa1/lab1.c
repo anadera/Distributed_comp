@@ -74,13 +74,12 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	printf("parent step1\n");
 	Message msg = { {0} };
 	int self = p->id;
-	int num = p->x;
+	int size = p->x;
 	FILE * des = f->events;
 	printf ("parent: self = %d, num = %d\n step1", self, num);
-	while(num > 0){
-		if (num != self)
+	for (num=1; num<=size; num++){
+		//if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
-		num--;
 	}
 	log_events(log_received_all_started_fmt,self, des);
 }
@@ -90,14 +89,13 @@ void parent_step1(PROCESS* p, FILENAME* f){
 void parent_step3(PROCESS* p, FILENAME * f){
 	printf("parent step3\n");
 	int self = p->id;
-	int num = p->x;
+	int size = p->x;
 	FILE * des = f->events;
 	Message msg = { {0} };
 	printf ("parent: self = %d, num = %d\n step3", self, num);
-	while(num > 0){
-		if (num != self)
+	for (int num=1; num<=size; num++){
+		//if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
-		num--;
 	}
 	log_events(log_received_all_done_fmt,self, des);
 }
