@@ -76,7 +76,7 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
-	printf ("parent: self = %d, num = %d\n step1", self, num);
+	printf ("parent: self = %d, num = %d\n step1\n", self, num);
 	for (int i=0; i<=num; i++){
 		if (i != self)
 			while(receive((void*)p,i,&msg) != 0);
@@ -92,7 +92,7 @@ void parent_step3(PROCESS* p, FILENAME * f){
 	int num = p->x;
 	FILE * des = f->events;
 	Message msg = { {0} };
-	printf ("parent: self = %d, num = %d\n step3", self, num);
+	printf ("parent: self = %d, num = %d\n step3\n", self, num);
 	for (int i=0; i<=num; i++){
 		if (i != self)
 			while(receive((void*)p,i,&msg) != 0);
@@ -192,9 +192,9 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	parent_step1(p, f);
 	parent_step3(p, f);
 
-	for (int i=0; i<size; i++){
-		waitpid(pids[i], NULL,0);
-		i--;
+	for (int k=0; k<size; k++){
+		waitpid(pids[k], NULL,0);
+		k--;
 	}
 	return 0;
 }
