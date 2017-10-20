@@ -54,7 +54,7 @@ void set_fd(int array[][2], PROCESS * p){
 	}
 }
 
-void parent_step(PROCESS* p, FILENAME* f, const char * const fmt){
+int parent_step(PROCESS* p, FILENAME* f, const char * const fmt){
 	Message msg = { {0} };
 	int self = p->id;
 	int num = p->x;
@@ -64,6 +64,7 @@ void parent_step(PROCESS* p, FILENAME* f, const char * const fmt){
 			while(receive((void*)p,i,&msg) != 0);
 	}
 	log_events(fmt,self, des);
+	return SUCCESS;
 }
 
 void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char * const fmt_IN){
@@ -118,7 +119,8 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
 
-	parent_step(p, f, log_received_all_started_fmt);
+	if (parent_step(p, f, log_received_all_started_fmt))
+		//bank_robbery();
 	parent_step(p, f, log_received_all_done_fmt);
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
