@@ -161,9 +161,9 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 		if (pids[i] > 0){
 			/* Parent process */
-			printf ("parent: p->id = %d, id = %d", p->id, id);
+			printf ("parent: p->id = %d, id = %d\n", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
-			printf ("parent set fd vipolnilos");
+			printf ("parent set fd vipolnilos\n");
 			for(j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
@@ -171,13 +171,13 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 			int k = p->x;
 			while (k>0){
-				printf("buit myaso");
+				printf("buit myaso\n");
 				waitpid(pids[k], NULL,0);
 				k--;
-				printf("child %d zavershilsya", pids[k]);
+				printf("child %d zavershilsya\n", pids[k]);
 			}
 
-			printf ("parent zavershil cikl");
+			printf ("parent zavershil cikl\n");
 
 			printf ("parent pereshel k step1\n");
 			parent_step1(p, f);
