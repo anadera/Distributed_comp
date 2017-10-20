@@ -16,7 +16,7 @@ int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
 	int fd = p->fd[dst][1];
-	if (write(fd, msg, block) <0){
+	if (write(fd, msg, strlen(msg->body)) <0){
 		perror("send");
 		return FAILURE;
 	}
@@ -65,7 +65,7 @@ int receive(void * self, local_id from, Message * msg){
 		return FAILURE;
 	}
 	else
-		return SUCCESS;	
+		return SUCCESS;
 }
 
 /** Receive a message from any process.
