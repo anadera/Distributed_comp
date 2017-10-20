@@ -79,22 +79,22 @@ void parent_step3(PROCESS* p, FILENAME * f){
 	log_events(log_received_all_done_fmt,self, des);
 }
 */
-void child_step1(PROCESS* p, FILENAME* f){
+void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char * const fmt_IN){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
-	log_events(log_started_fmt,self, des);
-	create_msg(msg,STARTED,log_started_fmt, self);
+	log_events(fmt_OUT,self, des);
+	create_msg(msg,STARTED,fmt_OUT, self);
 	send_multicast((void*)p, (const Message *)&msg);
 	for (int i=1; i<=num; i++){
 		if (i != self && i !=0 )
 			while(receive((void*)p,i,&msgIN) != 0);
 	}
-	log_events(log_received_all_started_fmt,self, des);
+	log_events(fmt_IN,self, des);
 }
-
+/*
 void child_step3(PROCESS* p, FILENAME* f){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
@@ -110,6 +110,7 @@ void child_step3(PROCESS* p, FILENAME* f){
 	}
 	log_events(log_received_all_done_fmt,self, des);
 }
+*/
 
 /*
 size - number of children
@@ -128,8 +129,8 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			child_step1(p, f);
-			child_step3(p, f);
+			child_step(p, f, log_started_fmt, log_received_all_started_fmt);
+			child_step(p, f, log_done_fmt, log_received_all_done_fmt);
 			exit(0);
 		}
 
