@@ -165,6 +165,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			perror("create_process:child");
 			return FAILURE;
 		}
+<<<<<<< HEAD
 		else {
 			parent_step1(p, f);
 			printf ("parent %d pid %d zavershil step 1", id, getpid());
@@ -177,17 +178,27 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			}
 			printf ("parent zavershil cikl");
 		}
+=======
+>>>>>>> parent of f91a303... opasno
 	}
 
 	/* Parent process */
-	/*
+
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 	for(j=0;j<=size;j++){
 		if (j==id) continue;
 		log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 	}
-	*/
 
+	parent_step1(p, f);
+	printf ("parent %d pid %d zavershil step 1", id, getpid());
+	//parent_step2();
+	parent_step3(p, f);
+	printf ("parent %d pid %d zavershil step 3", id, getpid());
+	for (int k = 0; k<p->x; k++){
+		waitpid(pids[k], NULL,0);
+	}
+	printf ("parent zavershil cikl");
 	return SUCCESS;
 }
 
