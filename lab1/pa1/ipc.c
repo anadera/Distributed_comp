@@ -60,12 +60,11 @@ int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	int fd = p->fd[from][0];
 	int read_bytes = read(fd, msg, sizeof(Message));
-	if (read_bytes < 0){
-		perror("receive:read-bytes");
-		return FAILURE;
-	}
-	else
-		return SUCCESS;
+	if (read_bytes < 0 && errno != EAGAIN) {
+        perror("receive:read");
+        return FAILURE;
+    }
+    return read_bytes > 0 ? SUCCESS : FAILURE;
 }
 
 /** Receive a message from any process.
