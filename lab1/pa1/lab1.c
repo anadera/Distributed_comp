@@ -215,8 +215,6 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		}
 
 	}
-
-
 	return SUCCESS;
 }
 
@@ -226,7 +224,7 @@ int main(int argc, char* argv[]){
 	int x; //number of child processes
 	int pipes_num; //number of pipes
 	x = parse_x(argv); //works fine
-	pid_t pid[x]; //array of children' pids
+	pid_t pid[x] = NULL; //array of children' pids
 	pipes_num = x*(x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
