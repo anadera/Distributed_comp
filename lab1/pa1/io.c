@@ -26,16 +26,16 @@ int parse_x(char** argv){
 /*
 fill declared Message struct
 */
-int create_msg(Message msg, MessageType type, const char * const body, int id){
+void create_msg(Message msg, MessageType type, const char * const body, int id){
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	size_t buf = 0;
 	if (body == log_started_fmt){
 			buf = sprintf(tmp, body, id, getpid(), getppid());
-			printf(tmp);
+			printf(&tmp);
 	}
 	else {
 			buf = sprintf(tmp, body, id);
-			printf(tmp);
+			printf(&tmp);
 	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
