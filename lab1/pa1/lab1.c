@@ -76,12 +76,13 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
-	printf ("parent: self = %d, num = %d\n step1\n", self, num);
+	printf ("parent: self = %d, num = %d step1\n", self, num);
 	for (int i=0; i<=num; i++){
 		if (i != self)
 			while(receive((void*)p,i,&msg) != 0);
 	}
 	log_events(log_received_all_started_fmt,self, des);
+	printf("PARENT S1 ZALOGIROVALSYA\n");
 }
 
 //void parent_step2(){}
@@ -98,6 +99,7 @@ void parent_step3(PROCESS* p, FILENAME * f){
 			while(receive((void*)p,i,&msg) != 0);
 	}
 	log_events(log_received_all_done_fmt,self, des);
+	printf("PARENT S3 ZALOGIROVALSYA\n");
 }
 
 void child_step1(PROCESS* p, FILENAME* f){
@@ -148,11 +150,11 @@ size - number of children
 array - point on array with children pids
 */
 int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
-	pid_t i, j;
+	//pid_t i, j;
 	int size = p->x;
 	//int array_dc[size]; //array of id of determinated children
 	int id = 0;
-	for (i=0; i<size; i++){
+	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
 			p->id = i+1;
@@ -160,7 +162,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			printf ("child: p->id = %d, id = %d\n", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
 			printf ("child set fd vipolnilos\n");
-			for (j=0;j<=size;j++){
+			for (pid_t j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
@@ -184,17 +186,16 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	printf ("parent: p->id = %d, id = %d\n", p->id, id);
 	set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
 	printf ("parent set fd vipolnilos\n");
-	for(j=0;j<=size;j++){
-		if (j==id) continue;
-		log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
+	for(pid_t i=0;i<=size;i++){
+		if (i==id) continue;
+		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
 
 	parent_step1(p, f);
 	parent_step3(p, f);
 
-	for (int k=0; k<size; k++){
-		waitpid(pids[k], NULL,0);
-		k--;
+	for (int j=0; j<size; j++){
+		waitpid(pids[j], NULL,0);		
 	}
 	return 0;
 }
