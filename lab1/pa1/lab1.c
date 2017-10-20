@@ -71,9 +71,11 @@ status - points on array of children statuses
 } */
 
 void parent_step1(PROCESS* p, FILENAME* f){
+	printf("parent step1\n");
 	Message msg = { {0} };;
 	int self = p->id;
 	int num = p->x;
+	printf ("parent: self = %d, num = %d\n step1", self, num);
 	while(num > 0){
 		if (num != self)
 			while(receive((void*)p,num,&msg) != 0);
@@ -85,8 +87,10 @@ void parent_step1(PROCESS* p, FILENAME* f){
 //void parent_step2(){}
 
 void parent_step3(PROCESS* p, FILENAME * f){
+	printf("parent step3\n");
 	int self = p->id;
 	int num = p->x;
+	printf ("parent: self = %d, num = %d\n step3", self, num);
 	while(num > 0){
 		if (num != self){
 			Message msg = { {0} };
@@ -98,16 +102,17 @@ void parent_step3(PROCESS* p, FILENAME * f){
 }
 
 void child_step1(PROCESS* p, FILENAME* f){
+	printf("child step1\n");
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
-	printf ("child: self = %d, num = %d", self, num);
+	printf ("child: self = %d, num = %d\n step1", self, num);
 	log_events(log_started_fmt,self, f->events);
 	create_msg(msg,STARTED,log_started_fmt);
-	printf ("child step1 msg was created: %s", msg.s_payload);
+	printf ("child step1 msg was created: %s\n", msg.s_payload);
 	send_multicast((void*)p, &msg);
-	printf ("send multi was done");
+	printf ("send multi was done\n");
 
 	while(num > 0){
 		if (num != self)
@@ -120,10 +125,12 @@ void child_step1(PROCESS* p, FILENAME* f){
 /* void child_step2(){} */
 
 void child_step3(PROCESS* p, FILENAME * f){
+	printf("child step3\n");
 	Message msg = { {0} };;
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
+	printf ("child: self = %d, num = %d\n step3", self, num);
 	log_events(log_done_fmt,self, f->events);
 	create_msg(msg,DONE,log_done_fmt);
 	send_multicast((void*)p,&msg);
@@ -150,19 +157,19 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			/* Child process */
 			p->id = i+1;
 			id = i+1;
-			printf ("child: p->id = %d, id = %d", p->id, id);
+			printf ("child: p->id = %d, id = %d\n", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
-			printf ("child set fd vipolnilos");
+			printf ("child set fd vipolnilos\n");
 			for (j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			printf ("child %d pid %d perehodit k step 1", id, getpid());
+			printf ("child %d pid %d perehodit k step 1\n", id, getpid());
 			child_step1(p, f);
-			printf ("child %d pid %d zavershil step 1", id, getpid());
+			printf ("child %d pid %d zavershil step 1\n", id, getpid());
 			//child_step2();
 			child_step3(p, f);
-			printf ("child %d pid %d zavershil step 3", id, getpid());
+			printf ("child %d pid %d zavershil step 3\n", id, getpid());
 			exit(EXIT_SUCCESS);
 		}
 		else if (pids[i] == -1){
@@ -173,7 +180,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 		else {
 			/* Parent process */
-			p->id = 0;
+			/*p->id = 0;
 			id = 0;
 			printf ("parent: p->id = %d, id = %d", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
@@ -182,12 +189,14 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-
+			*/
+			printf ("parent pereshel k step1\n");
 			parent_step1(p, f);
-			printf ("parent %d pid %d zavershil step 1", id, getpid());
+			printf ("parent %d pid %d zavershil step 1\n", id, getpid());
 			//parent_step2();
+			printf ("parent pereshel k step3\n");
 			parent_step3(p, f);
-			printf ("parent %d pid %d zavershil step 3", id, getpid());
+			printf ("parent %d pid %d zavershil step 3\n", id, getpid());
 
 			}
 
