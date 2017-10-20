@@ -200,7 +200,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		waitpid(pids[i], NULL,0);
 		i--;
 	}
-	return SUCCESS;
+	return 0;
 }
 
 int main(int argc, char* argv[]){
@@ -223,9 +223,10 @@ int main(int argc, char* argv[]){
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	int r = create_child(fds,pid,p,f);
+	printf("GGGGGGGGGGGGGGGGGGG");
 	//if (create_child(fds,pid,p,f) == SUCCESS){
-		fclose(f->events);
-		fclose(f->pipes);
+		fclose((FILE *)f->events);
+		fclose((FILE*)f->pipes);
 		free((void*)p);
 		free((void*)f);
 		free((void*)pid);
