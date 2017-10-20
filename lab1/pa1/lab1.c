@@ -174,7 +174,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			printf ("parent %d pid %d zavershil step 3\n", id, getpid());
 		}
 
-		esle if (pids[i] == 0) {
+		else if (pids[i] == 0) {
 			/* Child process */
 			p->id = i+1;
 			id = i+1;
