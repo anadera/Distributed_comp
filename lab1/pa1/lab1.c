@@ -102,9 +102,12 @@ void child_step1(PROCESS* p, FILENAME* f){
 	Message msgIN = { {0} };;
 	int self = p->id;
 	int num = p->x;
+	printf ("child: self = %d, num = %d", self, num);
 	log_events(log_started_fmt,self, f->events);
 	create_msg(msg,STARTED,log_started_fmt);
+	printf ("child step1 msg was created: %s", msg->s_payload);
 	send_multicast((void*)p, &msg);
+	printf ("send multi was done");
 
 	while(num > 0){
 		if (num != self)
