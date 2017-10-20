@@ -169,6 +169,16 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
 
+			int k = p->x;
+			while (k>0){
+				printf("buit myaso");
+				waitpid(pids[k], NULL,0);
+				k--;
+				printf("child %d zavershilsya", pids[k]);
+			}
+
+			printf ("parent zavershil cikl");
+
 			printf ("parent pereshel k step1\n");
 			parent_step1(p, f);
 			printf ("parent %d pid %d zavershil step 1\n", id, getpid());
@@ -206,15 +216,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 	}
 
-	int k = p->x;
-	while (k>0){
-		printf("buit myaso");
-		waitpid(pids[k], NULL,0);
-		k--;
-		printf("child %d zavershilsya", pids[k]);
-	}
 
-	printf ("parent zavershil cikl");
 	return SUCCESS;
 }
 
