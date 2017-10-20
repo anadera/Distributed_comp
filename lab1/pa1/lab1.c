@@ -173,7 +173,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			printf ("parent %d pid %d zavershil step 3", id, getpid());
 			for (int k = 0; k<p->x; k++){
 				waitpid(pids[k], NULL,0);
-				log_events()
+				//log_events()
 			}
 			printf ("parent zavershil cikl");
 		}
