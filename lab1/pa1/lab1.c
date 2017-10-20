@@ -177,7 +177,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			exit(EXIT_SUCCESS);
 		}
 
-		else if () {
+		else if (pids[i] < 0) {
 			/* Fail process */
 			perror("create_process:child");
 			return FAILURE;
@@ -196,9 +196,9 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	parent_step1(p, f);
 	parent_step3(p, f);
 
-	for (int i=0; i<x; i++){
-		waitpid(pids[k], NULL,0);
-		k--;
+	for (int i=0; i<size; i++){
+		waitpid(pids[i], NULL,0);
+		i--;
 	}
 	return SUCCESS;
 }
