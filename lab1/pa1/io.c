@@ -31,11 +31,9 @@ void create_msg(Message msg, MessageType type, const char * const body, int id){
 	size_t buf = 0;
 	if (body == log_started_fmt){
 			buf = sprintf(tmp, body, id, getpid(), getppid());
-			printf(&tmp);
 	}
 	else {
-			buf = sprintf(tmp, body, id);
-			printf(&tmp);
+			buf = sprintf(tmp, body, id);			
 	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
