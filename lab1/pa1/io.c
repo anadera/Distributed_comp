@@ -33,7 +33,7 @@ void create_msg(Message msg, MessageType type, const char * const body, int id){
 			buf = sprintf(tmp, body, id, getpid(), getppid());
 	}
 	else {
-			buf = sprintf(tmp, body, id);			
+			buf = sprintf(tmp, body, id);
 	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,

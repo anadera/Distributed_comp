@@ -16,7 +16,7 @@ int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
   if (p->id == dst)
-    return -1;
+    return FAILURE;
 	int fd = p->fd[dst][1];
 	return write(fd, msg, sizeof(Message));
 }
@@ -56,16 +56,14 @@ int send_multicast(void * self, const Message * msg){
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
   if (p->id == from)
-    return -1;
-
+    return FAILURE;
 	int fd = p->fd[from][0];
 	int read_bytes = read(fd, msg, sizeof(Message));
 	if (read_bytes < 0 && errno != EAGAIN) {
         perror("receive:read");
         return -1;
-    }
-  return read_bytes > 0 ? 0 : -1;
-
+  }
+  return read_bytes > 0 ? SUCCESS : FAILURE;
 }
 
 /** Receive a message from any process.

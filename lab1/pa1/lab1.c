@@ -66,19 +66,6 @@ void parent_step(PROCESS* p, FILENAME* f, const char * const fmt){
 	log_events(fmt,self, des);
 }
 
-/*
-void parent_step3(PROCESS* p, FILENAME * f){
-	Message msg = { {0} };
-	int self = p->id;
-	int num = p->x;
-	FILE * des = f->events;
-	for (int i=0; i<=num; i++){
-		if (i != self)
-			while(receive((void*)p,i,&msg) != 0);
-	}
-	log_events(log_received_all_done_fmt,self, des);
-}
-*/
 void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char * const fmt_IN){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
@@ -94,23 +81,6 @@ void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char 
 	}
 	log_events(fmt_IN,self, des);
 }
-/*
-void child_step3(PROCESS* p, FILENAME* f){
-	Message msg = { {0} };
-	Message msgIN = { {0} };
-	int self = p->id;
-	int num = p->x;
-	FILE * des = f->events;
-	log_events(log_done_fmt,self, des);
-	create_msg(msg,DONE,log_done_fmt, self);
-	send_multicast((void*)p,(const Message *)&msg);
-	for (int i=1; i<=num; i++){
-		if (i != self && i != 0)
-			while(receive((void*)p,i,&msgIN) != 0);
-	}
-	log_events(log_received_all_done_fmt,self, des);
-}
-*/
 
 /*
 size - number of children
@@ -131,13 +101,13 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			}
 			child_step(p, f, log_started_fmt, log_received_all_started_fmt);
 			child_step(p, f, log_done_fmt, log_received_all_done_fmt);
-			exit(0);
+			exit(EXIT_SUCCESS);
 		}
 
 		else if (pids[i] < 0) {
 			/* Fail process */
 			perror("create_process:child");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 
@@ -153,7 +123,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
 	}
-	return 0;
+	return SUCCESS;
 }
 
 int main(int argc, char* argv[]){
