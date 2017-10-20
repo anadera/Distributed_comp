@@ -15,6 +15,8 @@
 int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
+  if (p->id == dst)
+    return -1;
 	int fd = p->fd[dst][1];
 	return write(fd, msg, sizeof(Message));
 }
