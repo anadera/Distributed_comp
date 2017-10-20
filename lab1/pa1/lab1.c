@@ -113,10 +113,9 @@ void child_step1(PROCESS* p, FILENAME* f){
 	send_multicast((void*)p, (const Message *)&msg);
 	printf ("child %d sent STARTED\n", getpid());
 
-	while(num > 0){
+	for (int i=1; i<=num; i++){
 		if (num != self)
 			while(receive((void*)p,num,&msgIN) != 0);
-		num--;
 		printf("dec num as child %d received STARTED, num = %d\n", getpid(), num);
 	}
 	log_events(log_received_all_started_fmt,self, des);
@@ -136,10 +135,9 @@ void child_step3(PROCESS* p, FILENAME* f){
 	create_msg(msg,DONE,log_done_fmt, self);
 	send_multicast((void*)p,(const Message *)&msg);
 	printf ("child %d sent DONE\n", getpid());
-	while(num > 0){
+	for (int i=1; i<=num; i++){
 		if (num != self)
-			while(receive((void*)p,num,&msgIN) != 0);
-		num--;
+			while(receive((void*)p,num,&msgIN) != 0);		
 		printf("dec num as child %d received DONE, num = %d\n", getpid(), num);
 	}
 	log_events(log_received_all_done_fmt,self, des);
