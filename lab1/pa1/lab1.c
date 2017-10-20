@@ -153,7 +153,28 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	//int array_dc[size]; //array of id of determinated children
 	int id = 0;
 	for (i=0; i<size; i++){
-		if ((pids[i] = fork()) == 0) {
+		pids[i] = fork();
+
+		if (pids[i] > 0){
+			/* Parent process */
+			printf ("parent: p->id = %d, id = %d", p->id, id);
+			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
+			printf ("parent set fd vipolnilos");
+			for(j=0;j<=size;j++){
+				if (j==id) continue;
+				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
+			}
+
+			printf ("parent pereshel k step1\n");
+			parent_step1(p, f);
+			printf ("parent %d pid %d zavershil step 1\n", id, getpid());
+			//parent_step2();
+			printf ("parent pereshel k step3\n");
+			parent_step3(p, f);
+			printf ("parent %d pid %d zavershil step 3\n", id, getpid());
+		}
+
+		esle if (pids[i] == 0) {
 			/* Child process */
 			p->id = i+1;
 			id = i+1;
@@ -172,34 +193,12 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			printf ("child %d pid %d zavershil step 3\n", id, getpid());
 			exit(EXIT_SUCCESS);
 		}
-		else if (pids[i] == -1){
+
+		else {
 			/* Fail process */
 			perror("create_process:child");
 			return FAILURE;
 		}
-
-		else {
-			/* Parent process */
-			/*p->id = 0;
-			id = 0;
-			printf ("parent: p->id = %d, id = %d", p->id, id);
-			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
-			printf ("parent set fd vipolnilos");
-			for(j=0;j<=size;j++){
-				if (j==id) continue;
-				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
-			}
-			*/
-			printf ("parent pereshel k step1\n");
-			parent_step1(p, f);
-			printf ("parent %d pid %d zavershil step 1\n", id, getpid());
-			//parent_step2();
-			printf ("parent pereshel k step3\n");
-			parent_step3(p, f);
-			printf ("parent %d pid %d zavershil step 3\n", id, getpid());
-
-			}
-
 
 	}
 
