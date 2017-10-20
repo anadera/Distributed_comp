@@ -72,7 +72,7 @@ status - points on array of children statuses
 
 void parent_step1(PROCESS* p, FILENAME* f){
 	printf("parent step1\n");
-	Message msg = { {0} };;
+	Message msg = { {0} };
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
@@ -104,8 +104,8 @@ void parent_step3(PROCESS* p, FILENAME * f){
 
 void child_step1(PROCESS* p, FILENAME* f){
 	printf("child step1\n");
-	Message msg = { {0} };;
-	Message msgIN = { {0} };;
+	Message msg = { {0} };
+	Message msgIN = { {0} };
 	FILE * des = f->events;
 	int self = p->id;
 	int num = p->x;
@@ -128,8 +128,8 @@ void child_step1(PROCESS* p, FILENAME* f){
 
 void child_step3(PROCESS* p, FILENAME* f){
 	printf("child step3\n");
-	Message msg = { {0} };;
-	Message msgIN = { {0} };;
+	Message msg = { {0} };
+	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
