@@ -1,5 +1,6 @@
 #include "io.h"
 #include "ipc.h"
+#include "pa1.h"
 
 /*
 parse command line arguments
@@ -28,10 +29,10 @@ fill declared Message struct
 void create_msg(Message msg, MessageType type, const char * const body, int id){
 	char tmp[MAX_PAYLOAD_LEN];
 	size_t buf;
-	switch(body){
-		case log_started_fmt:
+	if (body == log_started_fmt){
 			buf = sprintf(tmp, body, id, getpid(), getppid());
-		default:
+	}
+	else {
 			buf = sprintf(tmp, body, id);
 	}
 	msg.s_header = (MessageHeader) {
