@@ -74,12 +74,12 @@ void parent_step1(PROCESS* p, FILENAME* f){
 	printf("parent step1\n");
 	Message msg = { {0} };
 	int self = p->id;
-	int size = p->x;
+	int num = p->x;
 	FILE * des = f->events;
-	printf ("parent: self = %d, num = %d\n step1", self, size);
-	for (int num=1; num<=size; num++){
-		//if (num != self)
-			while(receive((void*)p,num,&msg) != 0);
+	printf ("parent: self = %d, num = %d\n step1", self, num);
+	for (int i=0; i<=num; i++){
+		if (i != self)
+			while(receive((void*)p,i,&msg) != 0);
 	}
 	log_events(log_received_all_started_fmt,self, des);
 }
@@ -89,13 +89,13 @@ void parent_step1(PROCESS* p, FILENAME* f){
 void parent_step3(PROCESS* p, FILENAME * f){
 	printf("parent step3\n");
 	int self = p->id;
-	int size = p->x;
+	int num = p->x;
 	FILE * des = f->events;
 	Message msg = { {0} };
-	printf ("parent: self = %d, num = %d\n step3", self, size);
-	for (int num=1; num<=size; num++){
-		//if (num != self)
-			while(receive((void*)p,num,&msg) != 0);
+	printf ("parent: self = %d, num = %d\n step3", self, num);
+	for (int i=0; i<=num; i++){
+		if (i != self)
+			while(receive((void*)p,i,&msg) != 0);
 	}
 	log_events(log_received_all_done_fmt,self, des);
 }
@@ -114,8 +114,8 @@ void child_step1(PROCESS* p, FILENAME* f){
 	printf ("child %d sent STARTED\n", getpid());
 
 	for (int i=1; i<=num; i++){
-		if (num != self)
-			while(receive((void*)p,num,&msgIN) != 0);
+		if (i != self && i !=0 )
+			while(receive((void*)p,i,&msgIN) != 0);
 		printf("dec num as child %d received STARTED, num = %d\n", getpid(), num);
 	}
 	log_events(log_received_all_started_fmt,self, des);
@@ -136,8 +136,8 @@ void child_step3(PROCESS* p, FILENAME* f){
 	send_multicast((void*)p,(const Message *)&msg);
 	printf ("child %d sent DONE\n", getpid());
 	for (int i=1; i<=num; i++){
-		if (num != self)
-			while(receive((void*)p,num,&msgIN) != 0);		
+		if (i != self && i != 0)
+			while(receive((void*)p,i,&msgIN) != 0);
 		printf("dec num as child %d received DONE, num = %d\n", getpid(), num);
 	}
 	log_events(log_received_all_done_fmt,self, des);
