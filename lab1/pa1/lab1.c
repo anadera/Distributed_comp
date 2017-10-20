@@ -196,7 +196,7 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	parent_step1(p, f);
 	parent_step3(p, f);
 
-	for (int i=0; i<size; i++){
+	for (int i=1; i<size; i++){
 		waitpid(pids[i], NULL,0);
 		i--;
 	}
