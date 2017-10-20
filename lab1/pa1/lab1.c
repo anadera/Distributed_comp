@@ -147,11 +147,14 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			/* Child process */
 			p->id = i+1;
 			id = i+1;
+			printf ("child: p->id = %d, id = %d", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для чилдов
+			printf ("child set fd vipolnilos");
 			for (j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
+			printf ("child %d pid %d perehodit k step 1", id, getpid());
 			child_step1(p, f);
 			printf ("child %d pid %d zavershil step 1", id, getpid());
 			//child_step2();
@@ -169,7 +172,9 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 			/* Parent process */
 			p->id = 0;
 			id = 0;
+			printf ("parent: p->id = %d, id = %d", p->id, id);
 			set_fd(array,p); //p.fd содержит полезную инф для парента и чилдов
+			printf ("parent set fd vipolnilos");
 			for(j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
@@ -188,8 +193,10 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 
 	int k = p->x;
 	while (k>0){
+		printf("buit myaso");
 		waitpid(pids[k], NULL,0);
 		k--;
+		printf("child %d zavershilsya", pids[k]);
 	}
 
 	printf ("parent zavershil cikl");
