@@ -27,8 +27,8 @@ int parse_x(char** argv){
 fill declared Message struct
 */
 void create_msg(Message msg, MessageType type, const char * const body, int id){
-	char tmp[MAX_PAYLOAD_LEN];
-	size_t buf;
+	char tmp[MAX_PAYLOAD_LEN] = NULL;
+	size_t buf = 0;
 	if (body == log_started_fmt){
 			buf = sprintf(tmp, body, id, getpid(), getppid());
 	}
