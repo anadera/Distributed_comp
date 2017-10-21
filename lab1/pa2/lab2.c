@@ -72,8 +72,8 @@ void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char 
 	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
-	FILE * des = f->events;	
-	create_msg(msg,STARTED,fmt_OUT, self);
+	FILE * des = f->events;
+	create_msg(msg,STARTED,fmt_OUT, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
 	log_events(fmt_OUT,self, des);
 	for (int i=1; i<=num; i++){

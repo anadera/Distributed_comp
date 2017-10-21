@@ -39,22 +39,38 @@ int * parse_x(int argc, char** argv){
 /*
 fill declared Message struct
 */
-void create_msg(Message msg, MessageType type, char * body, int id){
+void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance){
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	size_t buf = 0;
-	if (body == log_started_fmt){
-			buf = sprintf(tmp, body, id, getpid(), getppid());
-	}
-	else {
-			buf = sprintf(tmp, body, id);
+	time_t time = get_physical_time();
+	switch (type){
+		case STARTED:
+			buf = sprintf(tmp, body, time, id, getpid(), getppid(), balance);
+			strcpy(msg.s_payload, tmp, buf);
+			break;
+		case DONE:
+			buf = sprintf(tmp, body, time, id, balance);
+			strcpy(msg.s_payload, tmp, buf);
+			break;
+		case TRANSFER:
+			buf = sizeof(TransferOrder);
+			memcpy(msg.s_payload, body, buf);
+			break;
+		case BALANCE_HISTORY:
+			buf = sizeof(BalanceHistory);
+			memcpy(msg.s_payload, body, buf);
+			break;
+		default:
+			buf = 0;
+			msg.s_payload = "";
+			break;
 	}
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
 		.s_payload_len = buf,
 		.s_type = type,
-		.s_local_time = get_physical_time()
+		.s_local_time = time
 	};
-	memcpy(msg.s_payload, tmp, buf);
 }
 
 /*
