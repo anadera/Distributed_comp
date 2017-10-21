@@ -119,8 +119,8 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
 
-	if (parent_step(p, f, log_received_all_started_fmt))
-		//bank_robbery();
+	parent_step(p, f, log_received_all_started_fmt);
+	//bank_robbery();
 	parent_step(p, f, log_received_all_done_fmt);
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
