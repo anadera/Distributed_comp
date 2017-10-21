@@ -61,7 +61,7 @@ int receive(void * self, local_id from, Message * msg){
 	int read_bytes = read(fd, msg, sizeof(Message));
 	if (read_bytes < 0 && errno != EAGAIN) {
         perror("receive:read");
-        return -1;
+        return FAILURE;
   }
   return read_bytes > 0 ? SUCCESS : FAILURE;
 }
@@ -80,7 +80,7 @@ int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	int size = p->x;
 	for (int i=0; i<=size; i++){
-		if (receive(p,i, msg) == 0)
+		if (receive(p,i, msg) == SUCCESS)
       return SUCCESS;
 	}
 	return FAILURE;
