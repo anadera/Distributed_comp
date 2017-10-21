@@ -72,10 +72,10 @@ void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char 
 	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
-	FILE * des = f->events;
-	log_events(fmt_OUT,self, des);
+	FILE * des = f->events;	
 	create_msg(msg,STARTED,fmt_OUT, self);
 	send_multicast((void*)p, (const Message *)&msg);
+	log_events(fmt_OUT,self, des);
 	for (int i=1; i<=num; i++){
 		if (i != self && i !=0 )
 			while(receive((void*)p,i,&msgIN) != 0);
@@ -118,9 +118,11 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		if (i==id) continue;
 		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
-
+	//step 1
 	parent_step(p, f, log_received_all_started_fmt);
+	//step 2
 	//bank_robbery();
+	//step 3
 	parent_step(p, f, log_received_all_done_fmt);
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
