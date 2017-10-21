@@ -78,10 +78,10 @@ int receive(void * self, local_id from, Message * msg){
  */
 int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
-	int i;
 	int size = p->x;
-	for (i=0; i<size; i++){
-		receive((void*)p,i, msg);
+	for (int i=0; i<=size; i++){
+		if (receive(p,i, msg) == 0)
+      return SUCCESS;
 	}
-	return SUCCESS;
+	return FAILURE;
 }
