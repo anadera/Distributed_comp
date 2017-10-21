@@ -39,7 +39,7 @@ int * parse_x(int argc, char** argv){
 /*
 fill declared Message struct
 */
-void create_msg(Message msg, MessageType type, const char * const body, int id){
+void create_msg(Message msg, MessageType type, char * body, int id){
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	size_t buf = 0;
 	if (body == log_started_fmt){
