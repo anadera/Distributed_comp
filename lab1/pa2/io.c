@@ -54,7 +54,7 @@ void create_msg(Message msg, MessageType type, const char * const body, int id){
 		.s_type = type,
 		.s_local_time = get_physical_time()
 	};
-	strncpy(msg.s_payload, tmp, buf);
+	memcpy(msg.s_payload, tmp, buf);
 }
 
 /*
