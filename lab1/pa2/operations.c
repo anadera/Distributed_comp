@@ -65,8 +65,11 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	};
 	create_msg(msg,TRANSFER,(char *)&order,self,amount);
 	send((void *)p,src,(const Message *)&msg);
+  printf("%d: process id=%d send TRANSFER to process=%d\n",get_physical_time(),self,src);
 	while (receive((void *)p,dst,&msgIN)){
-		if (msgIN.s_header.s_type == ACK)
+		if (msgIN.s_header.s_type == ACK){
+      printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),self,dst);
 			break;
+    }
 	}
 }
