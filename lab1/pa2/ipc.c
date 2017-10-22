@@ -1,4 +1,3 @@
-#include "lab2.h"
 #include "ipc.h"
 
 /** Send a message to the process specified by id.
