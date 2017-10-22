@@ -100,7 +100,7 @@ int parent_after_done(PROCESS* p){
 			}
 		}
 	}
-	print_history(all);
+	print_history(&all);
 	return SUCCESS;
 }
 
