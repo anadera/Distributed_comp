@@ -67,7 +67,7 @@ int parent_step(PROCESS* p, FILENAME* f, int type){
 		case DONE:
 			fmt = log_received_all_done_fmt;
 			break;
-		case default:
+		default:
 			fmt = wrong_argument;
 			break;
 	}
@@ -81,7 +81,7 @@ int parent_work(PROCESS* p){
 	int self = p->id;
 	int num = p->x;
 	bank_robbery((void *)p, num);
-	create_msg(msg, STOP, NULL, self);
+	create_msg(msg, STOP, NULL, self,0);
 	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
 	return SUCCESS;
 }
@@ -90,13 +90,13 @@ int parent_after_done(PROCESS* p){
 	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
-	AllHistory all = {{{{{0}}}}};
+	AllHistory * all = {{{{{0}}}}};
 	for (int i=0; i<num; i++){
 		if (i != self) {
 			while( (receive((void*)p,i,&msgIN) != 0) &&
 					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
-				AllHistory all.s_history[i] = (BalanceHistory)msgIN.s_body;
-				AllHistory all.s_history_len++;
+				all.s_history[i] = (BalanceHistory)msgIN.s_body;
+				all.s_history_len++;
 			}
 		}
 	}
@@ -112,7 +112,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
 	int num = p->x;
 	FILE* des = f->events;
 	set_start_balance(self, h, array);
-	start_balance = h.s_history[self].s_balance;
+	start_balance = h->s_history[self].s_balance;
 	create_msg(msg,STARTED,log_started_fmt, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
@@ -137,18 +137,18 @@ void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 			continue;
 		}
 		else if (msgIN.s_header.s_type == STOP){
-			Message msg = {{0}};
+			Message* msg = {{0}};
 			balance_t fin_balance = h.s_history[h.s_history_len].s_balance;
-			create_msg(msg, DONE,log_done_fmt, self, fin_balance);
-			send_multicast(self, msg);
+			create_msg(msg, DONE,(const char const *)log_done_fmt, self, fin_balance);
+			send_multicast(p, msg);
 			printf(log_done_fmt, get_physical_time(),self,fin_balance);
 		}
 		else if (msgIN.s_header.s_type == DONE){
 			done_counter++;
 			if (done_counter == num-1){
 				Message msgBH = {{0}};
-				create_msg(msgBH,BALANCE_HISTORY,&h,self,0);
-				send(self, PARENT_ID,(const Message *)&msgBH);
+				create_msg(msgBH,BALANCE_HISTORY,(char *)h,self,0);
+				send(p, PARENT_ID,(const Message *)&msgBH);
 				exit(EXIT_SUCCESS);
 			}
 		}
@@ -168,7 +168,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
-			BalanceHistory * bh = {{{0}}};
+			BalanceHistory * bh = {{0}};
 			p->id = i+1;
 			id = i+1;
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
@@ -176,7 +176,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,get_physical_time(),id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			child_step(p, f, bh, fds, array);
+			child_step(p, f, bh, array);
 			child_work(p, f, bh);
 		}
 
@@ -213,7 +213,7 @@ int main(int argc, char* argv[]){
 	FILENAME * f;
 	int* x; //number of child processes
 	int pipes_num; //number of pipes
-	x = parse_x(argv); //works fine
+	x = parse_x(argc, argv); //works fine
 	int size_x = sizeof(&x)/sizeof(x[0]);
 	pid_t* pid; //array of children' pids
 	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);

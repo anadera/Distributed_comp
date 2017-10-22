@@ -44,11 +44,11 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 	switch (type){
 		case STARTED:
 			buf = sprintf(tmp, body, time, id, getpid(), getppid(), balance);
-			strcpy(msg.s_payload, tmp, buf);
+			strncpy(msg.s_payload, tmp, buf);
 			break;
 		case DONE:
 			buf = sprintf(tmp, body, time, id, balance);
-			strcpy(msg.s_payload, tmp, buf);
+			strncpy(msg.s_payload, tmp, buf);
 			break;
 		case TRANSFER:
 			buf = sizeof(TransferOrder);
@@ -60,7 +60,7 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 			break;
 		default:
 			buf = 0;
-			msg.s_payload = "";
+			msg.s_payload = NULL;
 			break;
 	}
 	msg.s_header = (MessageHeader) {
@@ -78,7 +78,7 @@ self - local process id
 des - descriptor of opened file
 */
 
-void log_pipes(const char * const fmt, int self, int fd_R, int fd_W, FILE* des){
+void log_pipes(const char * const fmt, timestamp_t time, int self, int fd_R, int fd_W, FILE* des){
 	if (printf(fmt,self,getpid(),getppid(), fd_R,fd_W) < 0)
 		perror("log_events:printf");
 	if (fprintf((FILE*)des,fmt,self,getpid(),getppid(), fd_R, fd_W) < 0)
