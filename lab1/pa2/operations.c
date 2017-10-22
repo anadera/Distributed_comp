@@ -31,7 +31,8 @@ void set_balance(BalanceHistory* history, balance_t amount){
 
 void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	Message msg = { {0} };
-	TransferOrder order = (TransferOrder)&msgIN->s_payload;
+	TransferOrder order;
+  memcpy(&order,&msgIN->s_payload, msgIN->s_header.s_payload_len);
 	balance_t amount = order.s_amount;
 	FILE * des = f->events;
 	int self = p->id;
