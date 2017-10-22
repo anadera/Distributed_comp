@@ -1,5 +1,4 @@
 #include "lab2.h"
-#include "bank_robbery.c"
 /*
 size - number of pipes,
 array - point on array of file descriptors
