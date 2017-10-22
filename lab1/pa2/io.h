@@ -12,4 +12,4 @@
 
 int * parse_x(int argc, char** argv);
 void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance);
-void log_pipes(const char * const fmt, timestamp_t time, int self, int fd_R, int fd_W, FILE* des);
+void log_pipes(const char * const fmt, int self, int fd_R, int fd_W, FILE* des);

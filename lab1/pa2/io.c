@@ -78,9 +78,9 @@ self - local process id
 des - descriptor of opened file
 */
 
-void log_pipes(const char * const fmt, timestamp_t time, int self, int fd_R, int fd_W, FILE* des){
-	if (printf(fmt,self,getpid(),getppid(), fd_R,fd_W) < 0)
+void log_pipes(const char * const fmt, int self, int fd_R, int fd_W, FILE* des){
+	if (printf(fmt, get_physical_time(),self,getpid(),getppid(), fd_R,fd_W) < 0)
 		perror("log_events:printf");
-	if (fprintf((FILE*)des,fmt,self,getpid(),getppid(), fd_R, fd_W) < 0)
+	if (fprintf((FILE*)des,fmt,get_physical_time(),self,getpid(),getppid(), fd_R, fd_W) < 0)
 		perror("log_events:fprintf");
 }
