@@ -1,5 +1,5 @@
-#ifndef __IO_H__
-#define __IO_H__
+#ifndef __IO_H__LAB_2__
+#define __IO_H__LAB_2__
 
 #include "ipc.h"
 #include "pa2345.h"
