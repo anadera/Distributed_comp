@@ -53,6 +53,7 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 }
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
+  printf("transfer\n");
 	PROCESS* p = (PROCESS*)parent_data;
 	Message msg = {{0}};
 	Message msgIN = {{0}};
