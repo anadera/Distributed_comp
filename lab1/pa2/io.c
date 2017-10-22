@@ -60,7 +60,7 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 			break;
 		default:
 			buf = 0;
-			msg.s_payload = NULL;
+			strncpy(msg.s_payload, body, buf);
 			break;
 	}
 	msg.s_header = (MessageHeader) {

@@ -1,6 +1,6 @@
 #include "operations.h"
 
-void set_start_balance(local_id self, BALANCE_HISTORY* h, int* array){
+void set_start_balance(local_id self, BalanceHistory* h, int* array){
 	h.s_id->self;
 	h.s_history_len = 1;
 	h.s_history[0] = (BalanceState){
@@ -12,7 +12,7 @@ void set_start_balance(local_id self, BALANCE_HISTORY* h, int* array){
 
 void set_balance(BalanceHistory* history, balance_t amount){
 	timestamp_t time = get_physical_time();
-	balance_t past_balance = history->s_balance;
+	balance_t past_balance = history->s_history[history->s_history_len-1].s_balance;
 	timestamp_t gap_from = history->s_history_len;
 	for (timestamp_t t = gap_from; t<time; t++){
 		history->s_history[t] = (BalanceState) {
@@ -31,7 +31,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 
 void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	Message msg = {{0}};
-	TransferOrder order = (TransferOrder *)msgIN->s_payload;
+	TransferOrder order = (TransferOrder)msgIN->s_payload;
 	balance_t amount = order.s_amount;
 	FILE * des = f->events;
 	int self = p->id;
@@ -45,8 +45,8 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 	else {
 		set_balance(h, -(amount));
 		send((void*)p, order.s_dst, (const Message *)&msgIN);
-		printf(log_transfer_out_fmt, b.s_time, self, order.s_amount, order.s_dst);
-		fprintf(des, log_transfer_out_fmt, b.s_time, self, order.s_amount, order.s_dst);
+		printf(log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
+		fprintf(des, log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 	}
 }
 
@@ -60,7 +60,7 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 		.s_dst = dst,
 		.s_amount = amount
 	};
-	create_msg(msg,TRANSFER,&order,self,amount);
+	create_msg(msg,TRANSFER,(char *)&order,self,amount);
 	send((void *)p,src,(const Message *)&msg);
 	while (receive((void *)p,dst,&msgIN)){
 		if (msgIN.s_header.s_type == ACK)
