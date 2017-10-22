@@ -114,7 +114,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
 	int num = p->x;
 	FILE* des = f->events;
 	set_start_balance(self, h, array);
-	start_balance = h->s_history[self].s_balance;
+	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
@@ -136,6 +136,7 @@ void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	while (1){
 		Message msgIN = { {0} };
 		if (receive_any(p, &msgIN) && msgIN.s_header.s_type == TRANSFER){
+			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
 			handle_transfer(p,&msgIN,h,f);
 			continue;
 		}

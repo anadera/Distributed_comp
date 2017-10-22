@@ -1,14 +1,14 @@
 #include "lab2.h"
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
-	h->s_id = self;  
+	h->s_id = self;
 	h->s_history_len = 1;
 	h->s_history[0] = (BalanceState){
 		.s_balance = array[self-1],
 		.s_time = get_physical_time(),
 		.s_balance_pending_in = 0
 	};
-  printf("%d: set_start_balance: id = %d, balance = %d", get_physical_time(),h->s_id, h->s_history[0].s_balance);
+  printf("%d: set_start_balance: id = %d, balance = %d\n", get_physical_time(),h->s_id, h->s_history[0].s_balance);
 }
 
 void set_balance(BalanceHistory* history, balance_t amount){
