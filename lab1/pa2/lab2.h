@@ -30,6 +30,8 @@ void create_pipe(int size, int array[][2]);
 void set_fd(int array[][2], PROCESS * p);
 int wait_child(int* array, PROCESS* p);
 int parent_step(PROCESS* p, FILENAME* f, int type);
+int parent_work(PROCESS* p);
+int parent_after_done(PROCESS* p);
 void child_step(PROCESS* p, FILENAME * f, const char * const fmt_OUT, const char * const fmt_IN);
 int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME* f);
 

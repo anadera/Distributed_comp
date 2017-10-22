@@ -80,6 +80,34 @@ int parent_step(PROCESS* p, FILENAME* f, int type){
 	return SUCCESS;
 }
 
+int parent_work(PROCESS* p){
+	Message msg = {{0}};
+	int self = p->id;
+	int num = p->x;
+	bank_robbery((void *)p, num);
+	create_msg(msg, STOP, NULL, self);
+	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
+	return SUCCESS;
+}
+
+int parent_after_done(PROCESS* p){
+	Message msgIN = { {0} };
+	int self = p->id;
+	int num = p->x;
+	AllHistory all = {{{{{0}}}}};
+	for (int i=0; i<num; i++){
+		if (i != self) {
+			while( (receive((void*)p,i,&msgIN) != 0) &&
+					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
+				AllHistory all.s_history[i] = (BalanceHistory)msgIN.s_body;
+				AllHistory all.s_history_len++;
+			}
+		}
+	}
+	print_history(all);
+	return SUCCESS;
+}
+
 void child_step(PROCESS* p, FILENAME* f, const char * const fmt_OUT, const char * const fmt_IN){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
@@ -134,9 +162,12 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 	//step 1
 	parent_step(p, f, STARTED);
 	//step 2
-	//bank_robbery();
+	parent_work(p);
 	//step 3
 	parent_step(p, f, DONE);
+	//step 4
+	parent_after_done(p);
+
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
 	}
