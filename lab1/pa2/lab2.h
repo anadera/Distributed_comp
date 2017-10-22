@@ -1,5 +1,4 @@
-#ifndef __LAB2_H__
-#define __LAB2_H__
+#pragma once
 
 #include <unistd.h> //pipe fork close getpid getppid
 #include <sys/types.h> //wait getpid getppid
@@ -43,5 +42,3 @@ int parent_after_done(PROCESS* p);
 void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array);
 void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h);
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME* f, int* array);
-
-#endif

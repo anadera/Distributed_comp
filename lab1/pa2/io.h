@@ -1,5 +1,4 @@
-#ifndef __IO_H__LAB_2__
-#define __IO_H__LAB_2__
+#pragma once
 
 #include "ipc.h"
 #include "pa2345.h"
@@ -14,4 +13,3 @@
 int * parse_x(int argc, char** argv);
 void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance);
 void log_pipes(const char * const fmt, timestamp_t time, int self, int fd_R, int fd_W, FILE* des);
-#endif

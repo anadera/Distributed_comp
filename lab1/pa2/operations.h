@@ -1,5 +1,4 @@
-#ifndef __OPERATIONS_H__
-#define __OPERATIONS_H__
+#pragma once
 
 #include "banking.h"
 #include "operations.h"
@@ -10,5 +9,3 @@
 void set_start_balance(local_id self, BalanceHistory* h, int* array);
 void set_balance(BalanceHistory* history, balance_t amount);
 void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f);
-
-#endif
