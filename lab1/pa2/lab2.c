@@ -95,7 +95,7 @@ int parent_after_done(PROCESS* p){
 		if (i != self) {
 			while( (receive((void*)p,i,&msgIN) != 0) &&
 					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
-				memcpy(&all->s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);				
+				memcpy(&all.s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);				
 				all.s_history_len = all.s_history_len + 1;
 			}
 		}
