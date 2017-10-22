@@ -168,6 +168,11 @@ array - point on array of start_balance
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array){
 	int size = p->x;
 	int id = 0;
+
+	int size_x = sizeof(&array)/sizeof(array[0]);
+	for (int lol=0; lol<size_x; lol++){
+		printf("x[%d] = %d\n", lol,array[lol]);
+	}
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
@@ -221,9 +226,9 @@ int main(int argc, char* argv[]){
 	int pipes_num; //number of pipes
 	int* x = parse_x(argc, argv); //number of child processes
 	int size_x = sizeof(&x)/sizeof(x[0]);
-	for (int lol=0; lol<size_x; lol++){
+	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
-	}
+	} */
 	pid_t* pid; //array of children' pids
 	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);
 	pipes_num = size_x*(size_x+1);
