@@ -54,16 +54,29 @@ void set_fd(int array[][2], PROCESS * p){
 	}
 }
 
-int parent_step(PROCESS* p, FILENAME* f, const char * const fmt){
+int parent_step(PROCESS* p, FILENAME* f, int type){
+	static const char * fmt;
 	Message msg = { {0} };
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
-	for (int i=0; i<=num; i++){
+	for (int i=0; i<num; i++){
 		if (i != self)
-			while(receive((void*)p,i,&msg) != 0);
+			while((receive((void*)p,i,&msg) != 0) && msg.s_header.s_type == type);
 	}
-	log_events(fmt,self, des);
+	switch(type){
+		case STARTED:
+			fmt = log_received_all_started_fmt;
+			break;
+		case DONE:
+			fmt = log_received_all_done_fmt;
+			break;
+		case default:
+			fmt = wrong_argument;
+			break;
+	}
+	printf(fmt,get_physical_time(),self);
+	fprintf(des,fmt,get_physical_time(),self);
 	return SUCCESS;
 }
 
@@ -119,11 +132,11 @@ int create_child(int array[][2], pid_t* pids, PROCESS* p, FILENAME * f){
 		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
 	//step 1
-	parent_step(p, f, log_received_all_started_fmt);
+	parent_step(p, f, STARTED);
 	//step 2
 	//bank_robbery();
 	//step 3
-	parent_step(p, f, log_received_all_done_fmt);
+	parent_step(p, f, DONE);
 	for (int j=0; j<size; j++){
 		waitpid(pids[j], NULL,0);
 	}
