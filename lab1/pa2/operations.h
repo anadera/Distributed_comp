@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lab2.h"
 #include "banking.h"
 #include "ipc.h"
 
