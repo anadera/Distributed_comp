@@ -2,7 +2,6 @@
 
 #include "lab2.h"
 #include "banking.h"
-#include "operations.h"
 #include "ipc.h"
 #include "io.h"
 #include "pa2345.h"
