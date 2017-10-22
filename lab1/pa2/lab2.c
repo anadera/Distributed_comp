@@ -83,8 +83,8 @@ int parent_work(PROCESS* p){
 	printf("%d: call bank_robbery, self=%d, num=%d\n", get_physical_time(), self, num);
 	bank_robbery((void *)p, num);
 	create_msg(msg, STOP, NULL, self,0);
-	printf("%d: process %d send ST\n", get_physical_time(), self, num);
 	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
+	printf("%d: process %d send STOP\n", get_physical_time(), self);
 	return SUCCESS;
 }
 
@@ -113,8 +113,9 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, array);
+	set_start_balance(self, h, &array);
 	start_balance = h->s_history[self].s_balance;
+	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
