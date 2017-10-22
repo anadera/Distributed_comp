@@ -113,7 +113,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, &array);
+	set_start_balance(self, h, array);
 	start_balance = h->s_history[self].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
@@ -220,7 +220,7 @@ int main(int argc, char* argv[]){
 	FILENAME * f;
 	int* x; //number of child processes
 	int pipes_num; //number of pipes
-	x = parse_x(argc, argv); //works fine
+	x = &parse_x(argc, argv); //works fine
 	int size_x = sizeof(&x)/sizeof(x[0]);
 	pid_t* pid; //array of children' pids
 	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);
