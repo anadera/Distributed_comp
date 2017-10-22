@@ -35,6 +35,7 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 	TransferOrder order;
   memcpy(&order,&msgIN->s_payload, msgIN->s_header.s_payload_len);
 	balance_t amount = order.s_amount;
+  printf("%d: process id=%d handle TRANSFER with src=%d, dst=%d, amount=%d\n",get_physical_time(),p->id,order.s_src,order.s_dst,amount);
 	FILE * des = f->events;
 	int self = p->id;
 	if (order.s_dst == self){
