@@ -1,6 +1,6 @@
 #include "ipc.h"
-#include "lab1.h"
-#include "io.h"
+#include "lab2.h"
+
 /** Send a message to the process specified by id.
  *
  * @param self    Any data structure implemented by students to perform I/O
