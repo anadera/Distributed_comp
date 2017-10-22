@@ -53,6 +53,7 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 		case TRANSFER:
 			buf = sizeof(TransferOrder);
 			memcpy(msg.s_payload, body, buf);
+			printf("create_msg:TRANSFER: %s\n",msg.s_payload);
 			break;
 		case BALANCE_HISTORY:
 			buf = sizeof(BalanceHistory);
