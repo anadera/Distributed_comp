@@ -95,7 +95,7 @@ int parent_after_done(PROCESS* p){
 		if (i != self) {
 			while( (receive((void*)p,i,&msgIN) != 0) &&
 					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
-				all.s_history[i] = (BalanceHistory)&msgIN.s_payload;
+				memcpy(&all->s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);				
 				all.s_history_len = all.s_history_len + 1;
 			}
 		}
@@ -174,7 +174,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				.s_id = p->id,
 				.s_history_len = 0,
 				.s_history = { {0} }
-			}
+			};
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
 			for (pid_t j=0;j<=size;j++){
 				if (j==id) continue;
