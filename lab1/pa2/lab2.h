@@ -11,7 +11,6 @@
 #include "common.h"
 #include "pa2345.h"
 #include "ipc.h"
-#include "operations.h"
 #include "banking.h"
 
 //#include <string.h> //strcmp
