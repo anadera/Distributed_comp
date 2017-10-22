@@ -1,8 +1,4 @@
-#include "lab1.h"
-#include "io.h"
-#include "common.h"
-#include "pa1.h"
-#include "ipc.h"
+#include "lab2.h"
 
 /*
 size - number of pipes,

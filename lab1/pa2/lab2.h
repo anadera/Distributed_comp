@@ -8,6 +8,13 @@
 #include <stdio.h> //perror
 #include <time.h> //time
 #include <errno.h>
+#include "io.h"
+#include "common.h"
+#include "pa2345.h"
+#include "ipc.h"
+#include "operations.h"
+#include "banking.h"
+
 //#include <string.h> //strcmp
 #define SUCCESS  0
 #define FAILURE -1
