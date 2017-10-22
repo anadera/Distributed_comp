@@ -10,7 +10,7 @@
 #include <sys/types.h> //getpid getppid
 
 int * parse_x(int argc, char** argv);
-void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance)
+void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance);
 void log_events(const char * const fmt, int self, FILE* des);
 void log_pipes(const char * const fmt, int self, int fd_R, int fd_W, FILE* des);
 #endif
