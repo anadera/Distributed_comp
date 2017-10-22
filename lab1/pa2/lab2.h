@@ -1,5 +1,5 @@
-#ifndef __LAB1_H__
-#define __LAB1_H__
+#ifndef __LAB2_H__
+#define __LAB2_H__
 
 #include <unistd.h> //pipe fork close getpid getppid
 #include <sys/types.h> //wait getpid getppid
