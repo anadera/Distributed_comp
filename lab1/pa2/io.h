@@ -3,6 +3,7 @@
 
 #include "ipc.h"
 #include "pa2345.h"
+#include "banking.h"
 #include <stdlib.h> //atoi exit
 #include <string.h> //strcpy strcmp strlen
 #include <stdio.h> //perror printf fprintf
