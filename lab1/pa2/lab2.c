@@ -133,7 +133,7 @@ void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	while (1){
 		Message msgIN = { {0} };
 		if (receive_any(p, &msgIN) && msgIN.s_header.s_type == TRANSFER){
-			handle_transfer(p,?msgIN,h,f);
+			handle_transfer(p,&msgIN,h,f);
 			continue;
 		}
 		else if (msgIN.s_header.s_type == STOP){
