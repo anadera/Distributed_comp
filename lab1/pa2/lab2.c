@@ -174,7 +174,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
 			for (pid_t j=0;j<=size;j++){
 				if (j==id) continue;
-				log_pipes(p_fd_fmt,id,p->fd[j][0],p->fd[j][1], f->pipes);
+				log_pipes(p_fd_fmt,get_physical_time(),id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
 			child_step(p, f, bh, fds, array);
 			child_work(p, f, bh);
@@ -191,7 +191,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	set_fd(fds,p); //p.fd содержит полезную инф для парента и чилдов
 	for(pid_t i=0;i<=size;i++){
 		if (i==id) continue;
-		log_pipes(p_fd_fmt,id,p->fd[i][0],p->fd[i][1], f->pipes);
+		log_pipes(p_fd_fmt,get_physical_time(),id,p->fd[i][0],p->fd[i][1], f->pipes);
 	}
 	//step 1
 	parent_step(p, f, STARTED);

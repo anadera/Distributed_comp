@@ -20,7 +20,9 @@
 #define FAILURE -1
 
 static const char * const p_fd_fmt =
-    "Process %1d (pid %5d, parent %5d) has READ fd %5d and WRITE fd %5d \n";
+    "%d: Process %1d (pid %5d, parent %5d) has READ fd %5d and WRITE fd %5d \n";
+static const char * const wrong_argument =
+  	"%d: process %1d received wrong argument for parent_step\n";
 
 typedef struct p{
 	int id;
