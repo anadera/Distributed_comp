@@ -90,12 +90,12 @@ int parent_after_done(PROCESS* p){
 	Message msgIN = { {0} };
 	int self = p->id;
 	int num = p->x;
-	AllHistory all = { { 0 } };
+	AllHistory all = { 0 };
 	for (int i=0; i<num; i++){
 		if (i != self) {
 			while( (receive((void*)p,i,&msgIN) != 0) &&
 					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
-				all.s_history[i] = (BalanceHistory)msgIN.s_payload;
+				all.s_history[i] = (BalanceHistory)&msgIN.s_payload;
 				all.s_history_len = all.s_history_len + 1;
 			}
 		}
@@ -168,9 +168,13 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
-			BalanceHistory bh = {  {0} } ;
 			p->id = i+1;
 			id = i+1;
+			BalanceHistory bh = {
+				.s_id = p->id,
+				.s_history_len = 0,
+				.s_history = { {0} }
+			}
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
 			for (pid_t j=0;j<=size;j++){
 				if (j==id) continue;
