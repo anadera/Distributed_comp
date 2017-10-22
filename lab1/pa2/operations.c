@@ -1,9 +1,9 @@
 #include "operations.h"
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
-	h.s_id->self;
-	h.s_history_len = 1;
-	h.s_history[0] = (BalanceState){
+	h->s_id = self;
+	h->s_history_len = 1;
+	h->s_history[0] = (BalanceState){
 		.s_balance = array[self-1],
 		.s_time = get_physical_time(),
 		.s_balance_pending_in = 0
@@ -31,7 +31,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 
 void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	Message msg = {{0}};
-	TransferOrder order = (TransferOrder)msgIN->s_payload;
+	TransferOrder order = (TransferOrder)msgIN.s_payload;
 	balance_t amount = order.s_amount;
 	FILE * des = f->events;
 	int self = p->id;
