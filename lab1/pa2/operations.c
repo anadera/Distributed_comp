@@ -1,4 +1,4 @@
-#include "operations.h"
+#include "lab2.h"
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
 	h->s_id = self;
