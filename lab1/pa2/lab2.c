@@ -112,7 +112,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int array[]){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, array[]);
+	set_start_balance(self, h, array[num]);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
@@ -267,7 +267,7 @@ int main(int argc, char* argv[]){
 	if (argc <4){
 		perror("wrong args number");
 		exit(EXIT_FAILURE);
-	}	
+	}
 	else if (atoi(argv[2]) <2 || atoi(argv[2]) >10){
 		perror("wrong X, X: [2;10]");
 		exit(EXIT_FAILURE);
