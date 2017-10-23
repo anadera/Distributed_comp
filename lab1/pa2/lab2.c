@@ -220,7 +220,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 			}
 			child_step(p, f, &bh, array);
 			for (int g=0; g<size; g++)
-				printf("fd=%d\n", fd[g][0]);
+				printf("fd=%d\n", p->fd[g][0]);
 			int status = child_work(p, f, &bh);
 			if (status != 0)
 				return FAILURE;
