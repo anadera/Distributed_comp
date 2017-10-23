@@ -135,7 +135,9 @@ void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	printf("start child_work\n");
 	while (1){
 		Message msgIN = { {0} };
-		if (receive_any((void *)p, &msgIN) && msgIN.s_header.s_type == TRANSFER){
+		receive_any((void *)p, &msgIN);
+		printf("child_work.receive_any: %d\n", msgIN.s_header.s_type);
+		if (msgIN.s_header.s_type == TRANSFER){
 			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
 			handle_transfer(p,&msgIN,h,f);
 			continue;
