@@ -85,7 +85,7 @@ int receive_any(void * self, Message * msg){
   char buff[MAX_MESSAGE_LEN];
 	int size = p->x;
   while(1){
-	   for (int i=0; i<=size+1; i++){
+	   for (int i=0; i<size; i++){
        if (i==p->id)
           continue;
        int fd = p->fd[i][0];
