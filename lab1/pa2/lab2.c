@@ -151,6 +151,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				if (order.s_src == self){
 					set_balance(h, -(order.s_amount));
 					status = send(p,order.s_dst,(const Message *)&msg);
+					printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 					if (status != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
