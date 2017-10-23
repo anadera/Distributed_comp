@@ -141,7 +141,9 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
 		if (msgIN.s_header.s_type == TRANSFER){
 			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
-			handle_transfer(p,&msgIN,h,f);
+			status = handle_transfer(p,&msgIN,h,f);
+			if (status!=0)
+				return FAILURE;
 			continue;
 		}
 		else if (msgIN.s_header.s_type == STOP){
@@ -194,7 +196,9 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
 			child_step(p, f, &bh, array);
-			child_work(p, f, &bh);
+			int status = child_work(p, f, &bh);
+			if (status != 0)
+				return FAILURE;
 		}
 
 		else if (pids[i] < 0) {
