@@ -1,6 +1,6 @@
 #include "lab2.h"
 
-void set_start_balance(local_id self, BalanceHistory* h, int* array[]){
+void set_start_balance(local_id self, BalanceHistory* h, int array[]){
 	h->s_id = self;
 	h->s_history_len = 1;
 	h->s_history[0] = (BalanceState){

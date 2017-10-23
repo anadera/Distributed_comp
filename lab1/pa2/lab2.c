@@ -105,14 +105,14 @@ int parent_after_done(PROCESS* p){
 	return SUCCESS;
 }
 
-void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
+void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int array[]){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
 	balance_t start_balance = 0;
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, array);
+	set_start_balance(self, h, array[]);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
