@@ -133,11 +133,12 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	int num = p->x;
 	int done_counter = 0;
 	Message msg;
+	TransferOrder order;
 	memset(&msg, 0, sizeof msg);
 	balance_t fin_balance;
 	printf("start child_work\n");
 	while (1){
-		int mail = receive_any((void *)p, &msg);
+		int status = receive_any((void *)p, &msg);
 		if(mail != 0)
 			return FAILURE;
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msg.s_header.s_type);
