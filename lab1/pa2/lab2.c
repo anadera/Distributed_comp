@@ -105,7 +105,7 @@ int parent_after_done(PROCESS* p){
 	return SUCCESS;
 }
 
-void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int array[]){
+void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int * array){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
 	balance_t start_balance = 0;
@@ -203,11 +203,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	int size = p->x;
 	printf("create_Child_size: %d\n", size);
 	int id = 0;
-
-	int size_x = sizeof(&array)/sizeof(array[0]);
-	for (int lol=0; lol<size_x; lol++){
-		printf("x[%d] = %d\n", lol,array[lol]);
-	}
+	int size=p->x;
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
@@ -301,7 +297,7 @@ int main(int argc, char* argv[]){
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,array_x);
+	int r = create_child(fds,pid,p,f,&array_x);
 	fclose((FILE *)f->events);
 	fclose((FILE*)f->pipes);
 	free((void*)p);
