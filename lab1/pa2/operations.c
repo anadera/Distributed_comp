@@ -34,7 +34,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 
 int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	TransferOrder order;
-  inst status;
+  int status;
   memcpy(&order,&msgIN->s_payload, msgIN->s_header.s_payload_len);
 	balance_t amount = order.s_amount;
   printf("%d: process id=%d handle TRANSFER with src=%d, dst=%d, amount=%d\n",get_physical_time(),p->id,order.s_src,order.s_dst,amount);
