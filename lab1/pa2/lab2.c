@@ -138,6 +138,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	balance_t fin_balance;
 	printf("start child_work\n");
 	while (1){
+		printf("WHILE ITERATION\n");
 		int status = receive_any((void *)p, &msg);
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		if(status != 0){
