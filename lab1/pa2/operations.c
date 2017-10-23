@@ -64,6 +64,7 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
 		status = send((void*)p, order.s_dst, (const Message *)&msgIN);
     if (status != 0)
       return FAILURE;
+    printf("AZAZA\n");
 		printf(log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 		fprintf(des, log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 	}
