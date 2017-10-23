@@ -79,10 +79,20 @@ int receive(void * self, local_id from, Message * msg){
  */
 int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
+  char buff[MAX_MESSAGE_LEN];
 	int size = p->x;
-	for (int i=0; i<=size; i++){
-		if (receive(p,i, msg) == SUCCESS)
-      return SUCCESS;
-	}
-	return FAILURE;
+  while(1){
+	   for (int i=0; i<size; i++){
+       if (i==p->id)
+          continue;
+       int fd = p->fd[i][0];
+       int read_bytes = read(fd,buff, sizeof(buff));
+       if (read_bytes>0){
+         memcpy(msg,buff,read_bytes);
+         return SUCCESS;
+       }
+	   }
+     usleep(10000);
+   }
+	return SUCCESS;
 }
