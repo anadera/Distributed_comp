@@ -74,7 +74,7 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
   	.s_type = TRANSFER,
   	.s_local_time = time
   };
-  memcpy(msg.s_payload, order, buf);
+  memcpy(msg.s_payload, (void*)&order, buf);
   //
 	send((void *)p,src,(const Message *)&msg);
   printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),self,msg.s_header.s_type,src);
