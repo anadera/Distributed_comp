@@ -36,7 +36,7 @@ typedef struct f{
 void create_pipe(int size, int array[][2]);
 void set_fd(int array[][2], PROCESS * p);
 
-void set_start_balance(local_id self, BalanceHistory* h, int* array);
+void set_start_balance(local_id self, BalanceHistory* h, int* array[]);
 void set_balance(BalanceHistory* history, balance_t amount);
 //int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f);
 
