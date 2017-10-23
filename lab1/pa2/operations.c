@@ -31,7 +31,6 @@ void set_balance(BalanceHistory* history, balance_t amount){
 }
 
 void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
-	Message msg = { {0} };
 	TransferOrder order;
   memcpy(&order,&msgIN->s_payload, msgIN->s_header.s_payload_len);
 	balance_t amount = order.s_amount;
@@ -40,7 +39,14 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 	int self = p->id;
 	if (order.s_dst == self){
 		set_balance(h, amount);
-		create_msg(msg, ACK, NULL, self,0);
+		//create_msg(msg, ACK, NULL, self,0);
+    Message msg;
+    msg.s_header = (MessageHeader) {
+    	.s_magic = MESSAGE_MAGIC,
+    	.s_payload_len = 0,
+    	.s_type = ACK,
+    	.s_local_time = get_physical_time()
+    };
 		send((void *)p, order.s_dst, (const Message *)&msg);
 		printf(log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
 		fprintf(des,log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
