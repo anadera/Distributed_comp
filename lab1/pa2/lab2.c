@@ -140,7 +140,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		int mail = receive_any((void *)p, &msg);
 		if(mail != 0)
 			return FAILURE;
-		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
+		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
 				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
