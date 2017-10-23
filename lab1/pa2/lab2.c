@@ -141,7 +141,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
 		if (msgIN.s_header.s_type == TRANSFER){
 			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
-			status = handle_transfer(p,&msgIN,h,f);
+			int status = handle_transfer(p,&msgIN,h,f);
 			if (status!=0)
 				return FAILURE;
 			continue;
