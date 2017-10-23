@@ -67,7 +67,7 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	//create_msg(msg,TRANSFER,(char *)&order,self,amount);
   size_t buf = 0;
   time_t time = get_physical_time();
-  buf = sizeof(TransferOrder);
+  buf = sizeof(order);
   msg.s_header = (MessageHeader) {
   	.s_magic = MESSAGE_MAGIC,
   	.s_payload_len = buf,
