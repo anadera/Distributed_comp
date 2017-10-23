@@ -112,7 +112,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int array[]){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, array[num]);
+	set_start_balance(self, h, &array);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
