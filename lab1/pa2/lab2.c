@@ -139,6 +139,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	printf("start child_work\n");
 	while (1){
 		int status = receive_any((void *)p, &msg);
+		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		if(status != 0){
 			perror("receive_any is failed");
 			exit(EXIT_FAILURE);
