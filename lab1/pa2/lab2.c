@@ -112,7 +112,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int array[]){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, array[]);
+	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
@@ -272,23 +272,23 @@ int main(int argc, char* argv[]){
 		perror("wrong key");
 		exit(EXIT_FAILURE);
 	}
-	else if (argv[2] <2 || argv[2] >10){
+	else if (atoi(argv[2]) <2 || atoi(argv[2]) >10){
 		perror("wrong X, X: [2;10]");
 		exit(EXIT_FAILURE);
 	}
 	else {
 		for (int i=3; i<argc; i++){
-			if (argv[i] <1 || arv[i]> 99)			{
+			if (atoi(argv[i]) <1 || atoi(argv[i])> 99)			{
 				perror("wrong S, S: [1;99]");
 				exit(EXIT_FAILURE);
 			}
 			else {
-				array_x[i-3]=atoi(argv[x]);
+				array_x[i-3]=atoi(argv[i]);
 			}
 		}
 	}
 
-	printf("main:size_x = %d\n", x);
+	printf("main:size_x = %d\n", size_x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
 	} */
@@ -305,7 +305,7 @@ int main(int argc, char* argv[]){
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,array_x[size_x]);
+	int r = create_child(fds,pid,p,f,array_x);
 	fclose((FILE *)f->events);
 	fclose((FILE*)f->pipes);
 	free((void*)p);
