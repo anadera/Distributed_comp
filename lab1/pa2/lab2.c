@@ -132,18 +132,19 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	local_id self = p->id;
 	int num = p->x;
 	int done_counter = 0;
-	Message msg, msgIN;
+	Message msg;
+	memset(&msg, 0, sizeof msg);
 	balance_t fin_balance;
 	printf("start child_work\n");
 	while (1){
-		int mail = receive_any((void *)p, &msgIN);
+		int mail = receive_any((void *)p, &msg);
 		if(mail != 0)
 			return FAILURE;
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
-		switch (msgIN.s_header.s_type){
+		switch (msg.s_header.s_type){
 			case (TRANSFER):
 				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
-				int status = handle_transfer(p,&msgIN,h,f);
+				int status = handle_transfer(p,&msg,h,f);
 				if (status!=0)
 					return FAILURE;
 				break;
