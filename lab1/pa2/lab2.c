@@ -146,8 +146,8 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 			case (TRANSFER):
 				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
-				if (order->s_src == self){
-					set_balance(h, order->s_amount);
+				if (order.s_src == self){
+					set_balance(h, order.s_amount);
 					status = send((void*)p,order.s_dst,&msg);
 					if (status != 0)
 						return FAILURE;
@@ -159,7 +159,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						.s_type = ACK,
 						.s_local_time = get_physical_time()
 					};
-					set_balance(h, -(order->s_amount));
+					set_balance(h, -(order.s_amount));
 					status = send(p,0, &msg);
 				}
 				break;
