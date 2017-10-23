@@ -40,6 +40,7 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 	FILE * des = f->events;
 	int self = p->id;
 	if (order.s_dst == self){
+    printf("%d: p %d handle_transfer:dst=self\n", get_physical_time(), p->id);
 		set_balance(h, amount);
 		//create_msg(msg, ACK, NULL, self,0);
     Message msg;
@@ -55,6 +56,7 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 		fprintf(des,log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
 	}
 	else {
+    printf("%d: p %d handle_transfer:dst!=self\n", get_physical_time(), p->id);
 		set_balance(h, -(amount));
 		send((void*)p, order.s_dst, (const Message *)&msgIN);
 		printf(log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
