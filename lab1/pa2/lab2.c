@@ -112,7 +112,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int * array){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = f->events;
-	set_start_balance(self, h, &array);
+	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
@@ -203,7 +203,6 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	int size = p->x;
 	printf("create_Child_size: %d\n", size);
 	int id = 0;
-	int size=p->x;
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
@@ -279,7 +278,7 @@ int main(int argc, char* argv[]){
 			}
 		}
 	}
-
+	int * array = &array_x;
 	printf("main:size_x = %d\n", size_x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
@@ -297,7 +296,7 @@ int main(int argc, char* argv[]){
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,&array_x);
+	int r = create_child(fds,pid,p,f,array);
 	fclose((FILE *)f->events);
 	fclose((FILE*)f->pipes);
 	free((void*)p);
