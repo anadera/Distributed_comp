@@ -18,7 +18,8 @@ int send(void * self, local_id dst, const Message * msg){
   if (p->id == dst)
     return FAILURE;
 	int fd = p->fd[dst][1];
-	return write(fd, msg, sizeof(Message));
+  size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
+	return write(fd, msg, size);
 }
 
 /** Send multicast message.
