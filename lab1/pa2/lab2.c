@@ -261,7 +261,7 @@ int main(int argc, char* argv[]){
 	PROCESS * p;
 	FILENAME * f;
 	int pipes_num; //number of pipes
-	int arrayb[];
+	int arrayb[] = {};
 	int x = parse_x(argc, argv, &arrayb); //number of child processes
 	printf("main:size_x = %d\n", x);
 	/* for (int lol=0; lol<size_x; lol++){
