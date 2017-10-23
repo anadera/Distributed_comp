@@ -32,6 +32,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 	history->s_history_len = time+1;
 }
 
+/*
 int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	TransferOrder order;
   int status;
@@ -72,6 +73,7 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
 	}
   return SUCCESS;
 }
+*/
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	//PROCESS* p = (PROCESS*)parent_data;
