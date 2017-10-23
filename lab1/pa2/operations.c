@@ -55,26 +55,25 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
   printf("transfer\n");
+  Message msgIN = {{0}};
 	PROCESS* p = (PROCESS*)parent_data;
-	Message msg = {{0}};
-	Message msgIN = {{0}};
-	int self = p->id;
+  int self = p->id;
+  time_t time = get_physical_time();
+	Message msg;
+  msg.s_header = (MessageHeader) {
+  	.s_magic = MESSAGE_MAGIC,
+  	.s_payload_len = sizeof(TransferOrder),
+  	.s_type = TRANSFER,
+  	.s_local_time = time
+  };
 	TransferOrder order = (TransferOrder){
 		.s_src = src,
 		.s_dst = dst,
 		.s_amount = amount
 	};
 	//create_msg(msg,TRANSFER,(char *)&order,self,amount);
-  size_t buf = 0;
-  time_t time = get_physical_time();
-  buf = sizeof(order);
-  msg.s_header = (MessageHeader) {
-  	.s_magic = MESSAGE_MAGIC,
-  	.s_payload_len = buf,
-  	.s_type = TRANSFER,
-  	.s_local_time = time
-  };
-  memcpy(msg.s_payload, (void*)&order, buf);
+
+  memcpy(msg.s_payload, &order, sizeof(TransferOrder));
   //
 	send((void *)p,src,(const Message *)&msg);
   printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),self,msg.s_header.s_type,src);
