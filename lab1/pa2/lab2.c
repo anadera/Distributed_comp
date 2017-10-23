@@ -128,14 +128,16 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array){
 	fprintf(des, log_received_all_started_fmt,get_physical_time(),self);
 }
 
-void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
+int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	local_id self = p->id;
 	int num = p->x;
 	int done_counter = 0;
 	printf("start child_work\n");
 	while (1){
 		Message msgIN = { {0} };
-		receive_any((void *)p, &msgIN);
+		int mail = receive_any((void *)p, &msgIN);
+		if(mail != 0)
+			return FAILURE;
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
 		if (msgIN.s_header.s_type == TRANSFER){
 			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);

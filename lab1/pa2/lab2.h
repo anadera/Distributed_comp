@@ -38,11 +38,11 @@ void set_fd(int array[][2], PROCESS * p);
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array);
 void set_balance(BalanceHistory* history, balance_t amount);
-void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f);
+int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f);
 
 int parent_step(PROCESS* p, FILENAME* f, int type);
 int parent_work(PROCESS* p);
 int parent_after_done(PROCESS* p);
 void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array);
-void child_work(PROCESS* p, FILENAME* f, BalanceHistory* h);
+int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h);
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME* f, int* array);

@@ -32,8 +32,9 @@ void set_balance(BalanceHistory* history, balance_t amount){
 	history->s_history_len = time+1;
 }
 
-void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
+int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f){
 	TransferOrder order;
+  inst status;
   memcpy(&order,&msgIN->s_payload, msgIN->s_header.s_payload_len);
 	balance_t amount = order.s_amount;
   printf("%d: process id=%d handle TRANSFER with src=%d, dst=%d, amount=%d\n",get_physical_time(),p->id,order.s_src,order.s_dst,amount);
@@ -50,7 +51,9 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
     	.s_type = ACK,
     	.s_local_time = get_physical_time()
     };
-		send((void *)p, PARENT_ID, (const Message *)&msg);
+		status = send((void *)p, PARENT_ID, (const Message *)&msg);
+    if (status != 0)
+      return FAILURE;
     printf("%d: prcoess id %d send ACK to process id %d\n", get_physical_time(),self,PARENT_ID);
 		printf(log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
 		fprintf(des,log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
@@ -58,10 +61,13 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
 	else {
     printf("%d: p %d handle_transfer:dst!=self\n", get_physical_time(), p->id);
 		set_balance(h, -(amount));
-		send((void*)p, order.s_dst, (const Message *)&msgIN);
+		status = send((void*)p, order.s_dst, (const Message *)&msgIN);
+    if (status != 0)
+      return FAILURE;
 		printf(log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 		fprintf(des, log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 	}
+  return SUCCESS;
 }
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
