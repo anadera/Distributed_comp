@@ -201,13 +201,13 @@ array - point on array of start_balance
 */
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array){
 	int size = p->x;
-	printf("create_Child_size: %d\n", size)
+	printf("create_Child_size: %d\n", size);
 	int id = 0;
 
 	int size_x = sizeof(&array)/sizeof(array[0]);
 	for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,array[lol]);
-	} 
+	}
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
 			/* Child process */
