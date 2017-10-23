@@ -61,10 +61,12 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
 	else {
     printf("%d: p %d handle_transfer:dst!=self\n", get_physical_time(), p->id);
 		set_balance(h, -(amount));
+    printf("AZAZA1\n");
 		status = send((void*)p, order.s_dst, (const Message *)&msgIN);
+    printf("AZAZA %d\n", status);
     if (status != 0)
       return FAILURE;
-    printf("AZAZA\n");
+    printf("AZAZA2\n");
 		printf(log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 		fprintf(des, log_transfer_out_fmt, get_physical_time(), self, order.s_amount, order.s_dst);
 	}
