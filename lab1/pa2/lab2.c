@@ -132,39 +132,39 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	local_id self = p->id;
 	int num = p->x;
 	int done_counter = 0;
+	Message msgIN;
 	printf("start child_work\n");
 	while (1){
-		Message msgIN = { {0} };
 		int mail = receive_any((void *)p, &msgIN);
 		if(mail != 0)
 			return FAILURE;
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msgIN.s_header.s_type);
-		if (msgIN.s_header.s_type == TRANSFER){
-			printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
-			int status = handle_transfer(p,&msgIN,h,f);
-			if (status!=0)
-				return FAILURE;
-			continue;
+		switch (msgIN.s_header.s_type){
+			case (TRANSFER):
+				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
+				int status = handle_transfer(p,&msgIN,h,f);
+				if (status!=0)
+					return FAILURE;
+				break;
+			case (STOP):
+				Message msg = { {0} };
+				balance_t fin_balance = h->s_history[h->s_history_len].s_balance;
+				create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
+				send_multicast((void*)p, (const Message *)&msg);
+				printf(log_done_fmt, get_physical_time(),self,fin_balance);
+				break;
+			case (DONE):
+				done_counter++;
+				if (done_counter == num-1){
+					Message msgBH = { {0} };
+					create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
+					send(p, PARENT_ID,(const Message *)&msgBH);
+					exit(EXIT_SUCCESS);
+				}
+				break;
 		}
-		else if (msgIN.s_header.s_type == STOP){
-			Message msg = { {0} };
-			balance_t fin_balance = h->s_history[h->s_history_len].s_balance;
-			create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
-			send_multicast((void*)p, (const Message *)&msg);
-			printf(log_done_fmt, get_physical_time(),self,fin_balance);
-		}
-		else if (msgIN.s_header.s_type == DONE){
-			done_counter++;
-			if (done_counter == num-1){
-				Message msgBH = { {0} };
-				create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
-				send(p, PARENT_ID,(const Message *)&msgBH);
-				exit(EXIT_SUCCESS);
-			}
-		}
-		else
-			continue;
 	}
+	return SUCCESS;
 }
 
 /*
