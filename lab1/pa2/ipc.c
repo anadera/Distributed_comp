@@ -22,7 +22,7 @@ int send(void * self, local_id dst, const Message * msg){
 	int fd = p->fd[dst][1];
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
 	int status = write(fd, msg, size);
-  return status > 0 ? SUCCESS : FAIL;
+  return status > 0 ? SUCCESS : FAILURE;
 }
 
 /** Send multicast message.
