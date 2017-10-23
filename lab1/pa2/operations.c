@@ -72,10 +72,10 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
   printf("did memcpy\n");
 	send(parent_data,src,&msg);
   printf("send TRANSFER\n");
-  printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),parent_data->id,msg.s_header.s_type,src);
+  printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
 	while (receive(parent_data,dst,&msgIN)){
 		if (msgIN.s_header.s_type == ACK){
-      printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),parent_data->id,dst);
+      printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
 			break;
     }
 	}
