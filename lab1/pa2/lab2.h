@@ -45,4 +45,4 @@ int parent_work(PROCESS* p);
 int parent_after_done(PROCESS* p);
 void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int* array);
 int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h);
-int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME* f, int* array);
+int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME* f, int array[]);

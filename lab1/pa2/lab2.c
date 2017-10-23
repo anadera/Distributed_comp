@@ -261,26 +261,51 @@ int main(int argc, char* argv[]){
 	PROCESS * p;
 	FILENAME * f;
 	int pipes_num; //number of pipes
-	int arrayb[] = {};
-	int x = parse_x(argc, argv, &arrayb); //number of child processes
+
+	int size_x = atoi(argv[2]);
+	int array_x[size_x];
+	if (argc <4){
+		perror("wrong args number");
+		exit(EXIT_FAILURE);
+	}
+	else if (argv[1] !="-p"){
+		perror("wrong key");
+		exit(EXIT_FAILURE);
+	}
+	else if (argv[2] <2 || argv[2] >10){
+		perror("wrong X, X: [2;10]");
+		exit(EXIT_FAILURE);
+	}
+	else {
+		for (int i=3; i<argc; i++){
+			if (argv[i] <1 || arv[i]> 99)			{
+				perror("wrong S, S: [1;99]");
+				exit(EXIT_FAILURE);
+			}
+			else {
+				array_x[i-3]=atoi(argv[x]);
+			}
+		}
+	}
+
 	printf("main:size_x = %d\n", x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
 	} */
 	pid_t* pid; //array of children' pids
-	pid = (pid_t *)malloc(sizeof(pid_t)*x);
-	pipes_num = x*(x+1);
+	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);
+	pipes_num = size_x*(size_x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
 	f = (FILENAME *)malloc(sizeof(FILENAME));
-	p->x = x;
+	p->x = size_x;
 	p->id = 0;
 
 	f->events = fopen(events_log, "w+");
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,arrayb);
+	int r = create_child(fds,pid,p,f,array_x[size_x]);
 	fclose((FILE *)f->events);
 	fclose((FILE*)f->pipes);
 	free((void*)p);
