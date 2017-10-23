@@ -261,26 +261,26 @@ int main(int argc, char* argv[]){
 	PROCESS * p;
 	FILENAME * f;
 	int pipes_num; //number of pipes
-	int* x = parse_x(argc, argv); //number of child processes
-	int size_x = sizeof(x)/sizeof(x[0]);
-	printf("main:size_x = %d\n", size_x);
+	int * arrayb;
+	int x = parse_x(argc, argv, arrayb); //number of child processes
+	printf("main:size_x = %d\n", x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
 	} */
 	pid_t* pid; //array of children' pids
-	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);
-	pipes_num = size_x*(size_x+1);
+	pid = (pid_t *)malloc(sizeof(pid_t)*x);
+	pipes_num = x*(x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
 	f = (FILENAME *)malloc(sizeof(FILENAME));
-	p->x=size_x;
+	p->x = x;
 	p->id = 0;
 
 	f->events = fopen(events_log, "w+");
 	f->pipes = fopen(pipes_log, "w+");
 
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,x);
+	int r = create_child(fds,pid,p,f,arrayb);
 	fclose((FILE *)f->events);
 	fclose((FILE*)f->pipes);
 	free((void*)p);

@@ -4,7 +4,7 @@
 parse command line arguments
 return array from "./lab2 -p X array[0] array[1] ..."
 */
-int * parse_x(int argc, char** argv){
+int parse_x(int argc, char** argv, int * array){
 	int d;
     if(!strcmp(argv[1], "-p")){
 		if (!
@@ -20,7 +20,7 @@ int * parse_x(int argc, char** argv){
 		printf("parse_x:wrong key");
 		exit(-1);
     }
-    int * array = (int*)malloc(sizeof(int)*d);
+    //int * array = (int*)malloc(sizeof(int)*d);
 	for (int i=0; i<d; i++){
 	    if (!
 	    ((array[i] = atoi(argv[i+3])) > 0) &&
@@ -31,7 +31,7 @@ int * parse_x(int argc, char** argv){
 			exit(EXIT_FAILURE);
 	    }
 	}
-    return array;
+    return d;
 }
 
 /*
@@ -53,7 +53,7 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 		case TRANSFER:
 			buf = sizeof(TransferOrder);
 			memcpy(msg.s_payload, body, buf);
-			printf("create_msg:TRANSFER: %s size %d\n",&msg.s_payload, buf);
+			//printf("create_msg:TRANSFER: %s size %d\n",&msg.s_payload, buf);
 			break;
 		case BALANCE_HISTORY:
 			buf = sizeof(BalanceHistory);
