@@ -62,7 +62,7 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
     printf("%d: p %d handle_transfer:dst!=self\n", get_physical_time(), p->id);
 		set_balance(h, -(amount));
     printf("AZAZA1\n");
-		status = send((void*)p, order.s_dst, (const Message *)&msgIN);
+		status = send((void*)p, order.s_dst, msgIN);
     printf("AZAZA %d\n", status);
     if (status != 0)
       return FAILURE;
