@@ -132,7 +132,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	local_id self = p->id;
 	int num = p->x;
 	int done_counter = 0;
-	Message msgIN;
+	Message msg, msgIN;
 	printf("start child_work\n");
 	while (1){
 		int mail = receive_any((void *)p, &msgIN);
@@ -147,7 +147,6 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 					return FAILURE;
 				break;
 			case (STOP):
-				Message msg = { {0} };
 				balance_t fin_balance = h->s_history[h->s_history_len].s_balance;
 				create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
