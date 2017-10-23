@@ -267,11 +267,7 @@ int main(int argc, char* argv[]){
 	if (argc <4){
 		perror("wrong args number");
 		exit(EXIT_FAILURE);
-	}
-	else if (argv[1] !="-p"){
-		perror("wrong key");
-		exit(EXIT_FAILURE);
-	}
+	}	
 	else if (atoi(argv[2]) <2 || atoi(argv[2]) >10){
 		perror("wrong X, X: [2;10]");
 		exit(EXIT_FAILURE);
