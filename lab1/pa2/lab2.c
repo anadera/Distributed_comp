@@ -139,7 +139,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	printf("start child_work\n");
 	while (1){
 		int status = receive_any((void *)p, &msg);
-		if(mail != 0)
+		if(status != 0)
 			return FAILURE;
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msg.s_header.s_type);
 		switch (msg.s_header.s_type){
