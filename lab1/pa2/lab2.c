@@ -144,9 +144,23 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
 				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
-				int status = handle_transfer(p,&msg,h,f);
-				if (status!=0)
-					return FAILURE;
+				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
+				if (order->s_src == self){
+					set_balance(h, order->s_amount);
+					status = send((void*)p,order.s_dst,&msg);
+					if (status != 0)
+						return FAILURE;
+				}
+				else {
+					msg.s_header = (MessageHeader) {
+						.s_magic = MESSAGE_MAGIC,
+						.s_payload_len = 0,
+						.s_type = ACK,
+						.s_local_time = get_physical_time()
+					};
+					set_balance(h, -(order->s_amount));
+					status = send(p,0, &msg);
+				}
 				break;
 			case (STOP):
 				fin_balance = h->s_history[h->s_history_len].s_balance;
