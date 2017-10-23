@@ -15,11 +15,14 @@
 int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
 	//int count = strlen(msg);
-  if (p->id == dst)
+  if (p->id == dst){
+    perror("send:src=dst\n");
     return FAILURE;
+  }
 	int fd = p->fd[dst][1];
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
-	return write(fd, msg, size);
+	int status = write(fd, msg, size);
+  return status > 0 ? SUCCESS : FAIL;
 }
 
 /** Send multicast message.

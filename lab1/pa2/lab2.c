@@ -150,7 +150,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				if (order.s_src == self){
 					set_balance(h, -(order.s_amount));
-					status = send((void*)p,order.s_dst,&msg);
+					status = send(p,order.s_dst,(const Message *)&msg);
 					if (status != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
