@@ -59,12 +59,15 @@ int receive(void * self, local_id from, Message * msg){
   if (p->id == from)
     return FAILURE;
 	int fd = p->fd[from][0];
-	int read_bytes = read(fd, msg, sizeof(Message));
-	if (read_bytes < 0 && errno != EAGAIN) {
-        perror("receive:read");
-        return FAILURE;
+  char buff[MAX_MESSAGE_LEN];
+  while(1){
+    int read_bytes = read(fd, msg, sizeof(Message));
+    if (read_bytes > 0 ) {
+        memcpy(msg,buff,read_bytes);
+        return SUCCESS;
+    }
+    usleep(100000);
   }
-  return read_bytes > 0 ? SUCCESS : FAILURE;
 }
 
 /** Receive a message from any process.
