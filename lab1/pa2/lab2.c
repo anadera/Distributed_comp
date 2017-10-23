@@ -263,6 +263,7 @@ int main(int argc, char* argv[]){
 	int pipes_num; //number of pipes
 	int* x = parse_x(argc, argv); //number of child processes
 	int size_x = sizeof(&x)/sizeof(x[0]);
+	printf("main:size_x = %d\n", size_x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
 	} */
