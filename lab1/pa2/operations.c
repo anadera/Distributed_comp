@@ -47,7 +47,8 @@ void handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f
     	.s_type = ACK,
     	.s_local_time = get_physical_time()
     };
-		send((void *)p, order.s_dst, (const Message *)&msg);
+		send((void *)p, PARENT_ID, (const Message *)&msg);
+    printf("%d: prcoess id %d send ACK to process id %d\n", get_physical_time(),self,PARENT_ID);
 		printf(log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
 		fprintf(des,log_transfer_in_fmt, get_physical_time(), self, order.s_amount, order.s_src);
 	}
