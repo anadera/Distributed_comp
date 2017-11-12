@@ -100,13 +100,11 @@ int parent_after_done(PROCESS* p){
 	int self = p->id;
 	int num = p->x;
 	AllHistory all = { 0 };
-	for (int i=1; i<=num; i++){
-		if (i != self) {
-			while( (receive((void*)p,i,&msgIN) != 0) &&
-					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
-				memcpy(&all.s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);
-				all.s_history_len = all.s_history_len + 1;
-			}
+	for (int i=1; i<=num; i++){		
+		while( (receive((void*)p,i,&msgIN) != 0) &&
+		(msgIN.s_header.s_type == BALANCE_HISTORY) ){
+			memcpy(&all.s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);
+			all.s_history_len = all.s_history_len + 1;
 		}
 	}
 	print_history(&all);
