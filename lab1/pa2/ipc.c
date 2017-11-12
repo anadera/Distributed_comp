@@ -84,14 +84,16 @@ int receive(void * self, local_id from, Message * msg){
 int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
   char buff[MAX_MESSAGE_LEN];
-	int size = p->x*(p->x+1);
+	int size = p->x;
+  int fd = 0;
+  int read_bytes = 0;
   while(1){
 	   for (int i=0; i<size; i++){
        if (i==p->id)
           continue;
-       int fd = p->fd[i][0];
+       fd = p->fd[i][0];
        printf("receive_any: id=%d fd=%d\n", p->id ,fd);
-       int read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
+       read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
        if (read_bytes>0){
          memcpy(msg,buff,read_bytes);
          return SUCCESS;
