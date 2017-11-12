@@ -190,6 +190,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				printf("child work: DEFAULT\n");
 				break;
 		}
+		printf("switch is finished\n");
 	}
 	return SUCCESS;
 }
