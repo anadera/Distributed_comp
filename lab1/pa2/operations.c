@@ -76,7 +76,7 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
 */
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
-	//PROCESS* p = (PROCESS*)parent_data;
+	PROCESS* p = (PROCESS*)parent_data;
 	Message msg;
   Message msgIN = {{0}};
   msg.s_header = (MessageHeader) {
@@ -91,11 +91,13 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 		.s_amount = amount
 	};
   memcpy(msg.s_payload, &order, sizeof(TransferOrder));
-  printf("did memcpy\n");
-	send(parent_data,src,&msg);
-  printf("send TRANSFER\n");
-  printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
-	while (receive(parent_data,dst,&msgIN)){
+  //printf("did memcpy\n");
+	send(p,src,&msg);
+  //printf("send TRANSFER\n");
+  //printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
+	fprinf(f->events,p->log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
+	pprinf(p->log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
+	while (receive(p,dst,&msgIN)){
 		if (msgIN.s_header.s_type == ACK){
       printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
 			break;

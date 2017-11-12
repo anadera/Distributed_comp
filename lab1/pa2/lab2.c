@@ -51,12 +51,12 @@ void set_fd(int array[][2], PROCESS * p){
 	}
 }
 
-int parent_step(PROCESS* p, FILENAME* f, int type){
+int parent_step(PROCESS* p, int type){
 	static const char * fmt;
 	Message msg = { {0} };
 	int self = p->id;
 	int num = p->x;
-	FILE * des = f->events;
+	FILE * des = p->events;
 	for (int i=1; i<=num; i++){
 		if (i != self)
 			while((receive((void*)p,i,&msg) != 0) && msg.s_header.s_type == type);
@@ -100,7 +100,7 @@ int parent_after_done(PROCESS* p){
 	int self = p->id;
 	int num = p->x;
 	AllHistory all = { 0 };
-	for (int i=1; i<=num; i++){		
+	for (int i=1; i<=num; i++){
 		while( (receive((void*)p,i,&msgIN) != 0) &&
 		(msgIN.s_header.s_type == BALANCE_HISTORY) ){
 			memcpy(&all.s_history[i], &msgIN.s_payload, msgIN.s_header.s_payload_len);
@@ -111,13 +111,13 @@ int parent_after_done(PROCESS* p){
 	return SUCCESS;
 }
 
-void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int * array){
+void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	Message msg = { {0} };
 	Message msgIN = { {0} };
 	balance_t start_balance = 0;
 	int self = p->id;
 	int num = p->x;
-	FILE* des = f->events;
+	FILE* des = p->events;
 	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
 	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
@@ -134,7 +134,7 @@ void child_step(PROCESS* p, FILENAME* f, BalanceHistory* h, int * array){
 	fprintf(des, log_received_all_started_fmt,get_physical_time(),self);
 }
 
-int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
+int child_work(PROCESS* p, BalanceHistory* h){
 	local_id self = p->id;
 	int num = p->x;
 	int done_counter = 0;
@@ -228,7 +228,7 @@ size - number of children
 fds - point on array with children pids
 array - point on array of start_balance
 */
-int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array){
+int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 	int size = p->x;
 	//printf("create_Child_size: %d\n", size);
 	int id = 0;
@@ -245,7 +245,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
 			for (pid_t j=0;j<=size*(size+1);j++){
 				if (j==id) continue;
-				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
+				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], p->pipes);
 				//printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
 			}
 
@@ -266,7 +266,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	set_fd(fds,p); //p.fd содержит полезную инф для парента и чилдов
 	for(pid_t i=0;i<=size;i++){
 		if (i==id) continue;
-		log_pipes(p_fd_fmt,p->id,p->fd[i][0],p->fd[i][1], f->pipes);
+		log_pipes(p_fd_fmt,p->id,p->fd[i][0],p->fd[i][1], p->pipes);
 		//printf("array[%d][0]=%d array[%d][1]=%d\n", i, p->fd[i][0], i, p->fd[i][1]);
 	}
 	//step 1
@@ -286,7 +286,6 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 
 int main(int argc, char* argv[]){
 	PROCESS * p;
-	FILENAME * f;
 	int pipes_num; //number of pipes
 
 	int size_x = atoi(argv[2]);
@@ -320,19 +319,15 @@ int main(int argc, char* argv[]){
 	pipes_num = size_x*(size_x+1);
 	int fds[pipes_num][2]; //array of pipes' fds
 	p = (PROCESS *)malloc(sizeof(PROCESS)*pipes_num);
-	f = (FILENAME *)malloc(sizeof(FILENAME));
 	p->x = size_x;
 	p->id = 0;
-
-	f->events = fopen(events_log, "w+");
-	f->pipes = fopen(pipes_log, "w+");
-
+	p->events = fopen(events_log, "w+");
+	p->pipes = fopen(pipes_log, "w+");
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
 	int r = create_child(fds,pid,p,f,array);
-	fclose((FILE *)f->events);
-	fclose((FILE*)f->pipes);
+	fclose((FILE *)p->events);
+	fclose((FILE*)p->pipes);
 	free((void*)p);
-	free((void*)f);
 	free((void*)pid);
 	return r;
 }
