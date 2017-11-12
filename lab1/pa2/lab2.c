@@ -57,7 +57,7 @@ int parent_step(PROCESS* p, FILENAME* f, int type){
 	int self = p->id;
 	int num = p->x;
 	FILE * des = f->events;
-	for (int i=0; i<num; i++){
+	for (int i=1; i<=num; i++){
 		if (i != self)
 			while((receive((void*)p,i,&msg) != 0) && msg.s_header.s_type == type);
 	}
