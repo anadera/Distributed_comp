@@ -157,20 +157,20 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				//printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
-					fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,amount,0);
+					fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					printf(log_transfer_in_fmt,get_physical_time(),p->id,amount,0);
 					set_balance(h, -(order.s_amount));
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
-					fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,order.s_dst);
+					fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
 					printf(log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
 					//printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 				}
 				else {
-					fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,amount,order.s_src);
-					printf(log_transfer_in_fmt,get_physical_time(),p->id,amount,order.s_src);
+					fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,order.s_src);
+					printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,order.s_src);
 					msg.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = 0,
@@ -182,8 +182,8 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
 					}
-					fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,order.s_dst);
-					printf(log_transfer_out_fmt,get_physical_time(),p->id,amount,order.s_dst);
+					fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
+					printf(log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
 					//printf("%d: process %d send ACK=%d to 0\n", get_physical_time(),self,msg.s_header.s_type);
 				}
 				break;
