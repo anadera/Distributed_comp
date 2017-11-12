@@ -218,10 +218,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
 
-			child_step(p, f, &bh, array);
-			for (int g=0; g<size; g++){
-				printf("fd=%d\n", p->fd[g][0]);
-			}
+			child_step(p, f, &bh, array);			
 			int status = child_work(p, f, &bh);
 			if (status != 0)
 				return FAILURE;
