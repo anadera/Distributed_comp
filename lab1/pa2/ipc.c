@@ -88,19 +88,22 @@ int receive_any(void * self, Message * msg){
   int des = 0;
   int read_bytes = 0;
   int i;
-  for (i=0; i<=size; i++){
-    printf("receive_any: i=%d\n", i);
-    des=p->fd[i][0];
-    if (des == 0)
-      continue;
-    printf("receive_any: des=%d\n", des);
-    read_bytes = read(des,buff, MAX_MESSAGE_LEN);
-    if (read_bytes>0){
-      memcpy(msg,buff,read_bytes);
-      return SUCCESS;
+  while(1){
+    for (i=0; i<=size; i++){
+      printf("receive_any: i=%d\n", i);
+      des=p->fd[i][0];
+      if (des == 0 || des == NULL)
+        continue;
+      printf("receive_any: des=%d\n", des);
+      read_bytes = read(des,buff, MAX_MESSAGE_LEN);
+      if (read_bytes>0){
+        memcpy(msg,buff,read_bytes);
+        return SUCCESS;
+      }
+      else
+        continue;
     }
-    else
-      continue;
+    usleep(10000);
   }
   return FAILURE;
 }
