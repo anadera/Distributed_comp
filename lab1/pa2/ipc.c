@@ -99,5 +99,5 @@ int receive_any(void * self, Message * msg){
 	   }
      usleep(10000);
    }
-	return SUCCESS;
+	return FAILURE;
 }

@@ -137,9 +137,9 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	memset(&msg, 0, sizeof msg);
 	balance_t fin_balance;
 	printf("start child_work\n");
-	while (1){
+	while (receive_any((void *)p, &msg) != 0){
 		printf("WHILE ITERATION\n");
-		int status = receive_any((void *)p, &msg);
+		//int status = receive_any((void *)p, &msg);
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		if(status != 0){
 			perror("receive_any is failed");
@@ -218,7 +218,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			
+
 			child_step(p, f, &bh, array);
 			for (int g=0; g<size; g++){
 				printf("fd=%d\n", p->fd[g][0]);
