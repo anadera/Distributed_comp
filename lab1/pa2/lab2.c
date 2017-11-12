@@ -135,6 +135,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	int num = p->x;
 	int done_counter = 0;
 	Message msg;
+	size_t buf;
 	TransferOrder order;
 	memset(&msg, 0, sizeof msg);
 	balance_t fin_balance;
@@ -184,7 +185,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 					.s_local_time = get_physical_time()
 				};
 				char tmp[MAX_PAYLOAD_LEN] = "";
-				size_t buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
+				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
 				strncpy(msg.s_payload, tmp, buf);
 				//create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
@@ -199,9 +200,8 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = buf,
 						.s_type = BALANCE_HISTORY,
-						.s_local_time = time
+						.s_local_time = get_physical_time()
 					};
-					char tmp[MAX_PAYLOAD_LEN] = "";
 					buf = sizeof(BalanceHistory);
 					memcpy(msg.s_payload, &h, buf);
 					//create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
