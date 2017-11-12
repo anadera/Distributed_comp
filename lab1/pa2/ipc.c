@@ -87,11 +87,10 @@ int receive_any(void * self, Message * msg){
 	int size = p->x;
   int fd = 0;
   int read_bytes = 0;
+  int counter;
   while(1){
-	   for (int i=0; i<=size; i++){
+	   for (int counter=0; i<=size; i++){
        printf("receive_any:while:for: i = %d \n", i);
-       //if (i==p->id)
-          //continue;
        fd = p->fd[i][0];
        printf("receive_any: id=%d fd=%d\n", p->id ,fd);
        read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
@@ -99,8 +98,9 @@ int receive_any(void * self, Message * msg){
          memcpy(msg,buff,read_bytes);
          return SUCCESS;
        }
-       else
+       else {
         break;
+      }
 	   }
      usleep(10000);
    }
