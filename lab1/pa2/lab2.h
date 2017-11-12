@@ -23,11 +23,11 @@ static const char * const wrong_argument =
   	"%d: process %1d received wrong argument for parent_step\n";
 
 typedef struct p{
+  FILE * events;
+  FILE * pipes;
 	int id;
 	int x;
 	int fd[][2];
-  FILE * events;
-  FILE * pipes;
 } PROCESS;
 
 void create_pipe(int size, int array[][2]);

@@ -95,8 +95,8 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	send(p,src,&msg);
   //printf("send TRANSFER\n");
   //printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
-	fprinf(f->events,p->log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
-	pprinf(p->log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
+	fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
+	printf(log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
 	while (receive(p,dst,&msgIN)){
 		if (msgIN.s_header.s_type == ACK){
       printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);

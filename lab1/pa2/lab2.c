@@ -249,8 +249,8 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 				//printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
 			}
 
-			child_step(p, f, &bh, array);
-			int status = child_work(p, f, &bh);
+			child_step(p, &bh, array);
+			int status = child_work(p,&bh);
 			if (status != 0)
 				return FAILURE;
 		}
@@ -270,11 +270,11 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 		//printf("array[%d][0]=%d array[%d][1]=%d\n", i, p->fd[i][0], i, p->fd[i][1]);
 	}
 	//step 1
-	parent_step(p, f, STARTED);
+	parent_step(p, STARTED);
 	//step 2
 	parent_work(p);
 	//step 3
-	parent_step(p, f, DONE);
+	parent_step(p, DONE);
 	//step 4
 	parent_after_done(p);
 	//step 5
@@ -324,7 +324,7 @@ int main(int argc, char* argv[]){
 	p->events = fopen(events_log, "w+");
 	p->pipes = fopen(pipes_log, "w+");
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,f,array);
+	int r = create_child(fds,pid,p,array);
 	fclose((FILE *)p->events);
 	fclose((FILE*)p->pipes);
 	free((void*)p);
