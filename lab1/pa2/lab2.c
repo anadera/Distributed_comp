@@ -83,7 +83,13 @@ int parent_work(PROCESS* p){
 	int num = p->x;
 	printf("%d: call bank_robbery, self=%d, num=%d\n", get_physical_time(), self, num);
 	bank_robbery((void *)p, num);
-	create_msg(msg, STOP, NULL, self,0);
+	//create_msg(msg, STOP, NULL, self,0);
+	msg.s_header = (MessageHeader) {
+		.s_magic = MESSAGE_MAGIC,
+		.s_payload_len = 0,
+		.s_type = STOP,
+		.s_local_time = get_physical_time()
+	};
 	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
 	printf("%d: process %d send STOP\n", get_physical_time(), self);
 	return SUCCESS;
@@ -178,14 +184,14 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 			case (STOP):
 				printf("%d: child id=%d receive STOP=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				fin_balance = h->s_history[h->s_history_len].s_balance;
+				char tmp[MAX_PAYLOAD_LEN] = "";
+				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
 				msg.s_header = (MessageHeader) {
 					.s_magic = MESSAGE_MAGIC,
-					.s_payload_len = 0,
+					.s_payload_len = buf,
 					.s_type = DONE,
 					.s_local_time = get_physical_time()
 				};
-				char tmp[MAX_PAYLOAD_LEN] = "";
-				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
 				strncpy(msg.s_payload, tmp, buf);
 				//create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
