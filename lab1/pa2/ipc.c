@@ -91,11 +91,11 @@ int receive_any(void * self, Message * msg){
   int i;
   while(1){
     for (i=0; i<=size; i++){
-      printf("receive_any: i=%d id=%d\n", i, p->id);
+      //printf("receive_any: i=%d id=%d\n", i, p->id);
       des=p->fd[i][0];
       if (des == 0)
         continue;
-      printf("receive_any: des=%d id=%d\n", des, p->id);
+      //printf("receive_any: des=%d id=%d\n", des, p->id);
       read_bytes = read(des,buff, MAX_MESSAGE_LEN);
       if (read_bytes>0){
         memcpy(msg,buff,read_bytes);

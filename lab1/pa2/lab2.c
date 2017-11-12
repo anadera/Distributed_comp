@@ -147,7 +147,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	balance_t fin_balance;
 	printf("start child_work\n");
 	while (1){
-		printf("WHILE ITERATION\n");
+		//printf("WHILE ITERATION\n");
 		int status = receive_any((void *)p, &msg);
 		if (status != 0) {
 			printf ("child %d does not receive any msg\n", self);
@@ -220,7 +220,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				printf("%d: child id=%d receive msg type=%d\n", get_physical_time(),self, msg.s_header.s_type);
 				break;
 		}
-		printf("switch is finished\n");
+		//printf("switch is finished\n");
 	}
 	return SUCCESS;
 }
@@ -232,7 +232,7 @@ array - point on array of start_balance
 */
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array){
 	int size = p->x;
-	printf("create_Child_size: %d\n", size);
+	//printf("create_Child_size: %d\n", size);
 	int id = 0;
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
@@ -248,7 +248,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 			for (pid_t j=0;j<=size*(size+1);j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
-				printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
+				//printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
 			}
 
 			child_step(p, f, &bh, array);
@@ -269,7 +269,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	for(pid_t i=0;i<=size;i++){
 		if (i==id) continue;
 		log_pipes(p_fd_fmt,p->id,p->fd[i][0],p->fd[i][1], f->pipes);
-		printf("array[%d][0]=%d array[%d][1]=%d\n", i, p->fd[i][0], i, p->fd[i][1]);
+		//printf("array[%d][0]=%d array[%d][1]=%d\n", i, p->fd[i][0], i, p->fd[i][1]);
 	}
 	//step 1
 	parent_step(p, f, STARTED);
