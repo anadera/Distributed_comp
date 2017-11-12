@@ -95,15 +95,20 @@ int receive_any(void * self, Message * msg){
        printf("receive_any: id=%d fd=%d\n", p->id ,fd);
        read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
        if (read_bytes>0){
+         printf("metka1\n");
          memcpy(msg,buff,read_bytes);
+         printf("metka2\n");
          return SUCCESS;
        }
        else {
          perror ("receive_any:read_bytes =0 | <0");
          return FAILURE;
        }
+       printf("metka3\n");
 	   }
+     printf("metka4\n");
      usleep(10000);
+     printf("metka5\n");
    }
 	return FAILURE;
 }
