@@ -141,12 +141,10 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		printf("WHILE ITERATION\n");
 		//int status = receive_any((void *)p, &msg);
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
-
-		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
-				printf("%d: process id=%d receive TRANSFER\n", get_physical_time(),h->s_id);
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
+				printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
 					set_balance(h, -(order.s_amount));
 
