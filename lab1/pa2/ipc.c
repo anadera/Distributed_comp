@@ -89,7 +89,7 @@ int receive_any(void * self, Message * msg){
   int read_bytes = 0;
   int e,r;
   for (r=0;r<=2;r++){
-    printf("fd[%d][0]=%d fd[%d][1]=%d \n",r,fd[r][0],r, fd[r][1]);
+    printf("fd[%d][0]=%d fd[%d][1]=%d \n",r,p->fd[r][0],r, p->fd[r][1]);
   }
 
 	   for (e=0; e<=size; e++){
