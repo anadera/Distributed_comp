@@ -219,7 +219,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 			for (pid_t j=0;j<=size*(size+1);j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
-				printf("array[%d][0]=%d array[%d][1]=%d\n", j, fds[j][0], j, fds[j][1]);
+				printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
 			}
 
 			child_step(p, f, &bh, array);
