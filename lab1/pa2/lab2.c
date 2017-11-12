@@ -240,6 +240,7 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 	for(pid_t i=0;i<=size;i++){
 		if (i==id) continue;
 		log_pipes(p_fd_fmt,p->id,p->fd[i][0],p->fd[i][1], f->pipes);
+		printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[i][0], j, p->fd[i][1]);
 	}
 	//step 1
 	parent_step(p, f, STARTED);
