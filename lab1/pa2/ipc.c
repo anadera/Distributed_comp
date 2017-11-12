@@ -90,18 +90,13 @@ int receive_any(void * self, Message * msg){
           continue;
        int fd = p->fd[i][0];
        printf("receive_any: fd=%d\n", fd);
-       int read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
-       if (read_bytes>0){
-         printf("receive_any:read_bytes>0\n");
-         memcpy(msg,buff,read_bytes);
-         return SUCCESS;
-       }
-       else{
-        perror("receive_any:read_bytes<0\n");
-        return -1;
-      }
+       int read_bytes = read(fd,msg, MAX_MESSAGE_LEN);
+       if (read_bytes < 0 && errno != EAGAIN) {
+             perror("receive:read");
+             return FAILURE;
+       }       
 	   }
      usleep(10000);
    }
-	return FAILURE;
+	return SUCCESS;
 }
