@@ -141,10 +141,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		printf("WHILE ITERATION\n");
 		//int status = receive_any((void *)p, &msg);
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
-		if(status != 0){
-			perror("receive_any is failed");
-			exit(EXIT_FAILURE);
-		}
+
 		printf("%d: process is %d child_work.receive_any: %d\n", get_physical_time(), self, msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
@@ -152,9 +149,9 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				if (order.s_src == self){
 					set_balance(h, -(order.s_amount));
-					status = send(p,order.s_dst,(const Message *)&msg);
+
 					printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
-					if (status != 0){
+					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
@@ -167,8 +164,8 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						.s_local_time = get_physical_time()
 					};
 					set_balance(h, order.s_amount);
-					status = send(p,0, &msg);
-					if (status != 0){
+
+					if (send(p,0, &msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
 					}
