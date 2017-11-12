@@ -85,26 +85,18 @@ int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
   char buff[MAX_MESSAGE_LEN];
 	int size = p->x;
-  int fd = 0;
+  int des = 0;
   int read_bytes = 0;
-  int e,r;
-  for (r=0;r<=2;r++){
-    printf("fd[%d][0]=%d fd[%d][1]=%d \n",r,p->fd[r][0],r, p->fd[r][1]);
+  int i;
+  for (i=0; i<=size; i++){
+    des=p->fd[i][0];
+    read_bytes = read(des,buff, MAX_MESSAGE_LEN);
+    if (read_bytes>0){
+      memcpy(msg,buff,read_bytes);
+      return SUCCESS;
+    }
+    else
+      continue;
   }
-
-	   for (e=0; e<=size; e++){
-       printf("receive_any:while:for: i = %d \n", e);
-       fd = p->fd[e][0];
-       printf("receive_any: id=%d fd=%d\n", p->id ,fd);
-       read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
-       if (read_bytes>0){
-         memcpy(msg,buff,read_bytes);
-         return SUCCESS;
-       }
-       else {
-        break;
-      }
-	   }
-
-	return FAILURE;
+  return FAILURE;
 }
