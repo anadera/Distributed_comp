@@ -7,6 +7,7 @@
 #include <stdio.h> //perror
 #include <time.h> //time
 #include <errno.h>
+#include <fcntl.h>
 #include "io.h"
 #include "common.h"
 #include "pa2345.h"
