@@ -95,6 +95,10 @@ int receive_any(void * self, Message * msg){
          memcpy(msg,buff,read_bytes);
          return SUCCESS;
        }
+       else {
+         perror ("receive_any:read_bytes =0 | <0");
+         return FAILURE;
+       }
 	   }
      usleep(10000);
    }
