@@ -87,11 +87,11 @@ int receive_any(void * self, Message * msg){
 	int size = p->x;
   int fd = 0;
   int read_bytes = 0;
-  int counter;
+  int e;
   while(1){
-	   for (int counter=0; i<=size; i++){
-       printf("receive_any:while:for: i = %d \n", i);
-       fd = p->fd[i][0];
+	   for (e=0; e<=size; e++){
+       printf("receive_any:while:for: i = %d \n", e);
+       fd = p->fd[e][0];
        printf("receive_any: id=%d fd=%d\n", p->id ,fd);
        read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
        if (read_bytes>0){
