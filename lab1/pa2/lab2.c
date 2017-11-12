@@ -209,10 +209,10 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						.s_local_time = get_physical_time()
 					};
 					buf = sizeof(BalanceHistory);
-					memcpy(msg.s_payload, &h, buf);
+					memcpy(msgBH.s_payload, &h, buf);
 					//create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
 					send(p, PARENT_ID,(const Message *)&msgBH);
-					printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msg.s_header.s_type);
+					printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msgBH.s_header.s_type);
 					exit(EXIT_SUCCESS);
 				}
 				break;
