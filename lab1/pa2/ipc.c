@@ -17,7 +17,7 @@ int send(void * self, local_id dst, const Message * msg){
   int des;
 	//int count = strlen(msg);
   if (p->id == dst){
-    perror("send:src=dst id=%d dst=%d msg=%d\n",p->id, dst, msg->s_header.s_type);
+    printf("send:src=dst id=%d dst=%d msg=%d\n",p->id, dst, msg->s_header.s_type);
     return FAILURE;
   }
 	des = p->fd[dst][1];
