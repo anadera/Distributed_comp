@@ -91,7 +91,7 @@ int receive_any(void * self, Message * msg){
   for (i=0; i<=size; i++){
     printf("receive_any: i=%d\n", i);
     des=p->fd[i][0];
-    if (des = 0)
+    if (des == 0)
       continue;
     printf("receive_any: des=%d\n", des);
     read_bytes = read(des,buff, MAX_MESSAGE_LEN);
