@@ -186,6 +186,9 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 					exit(EXIT_SUCCESS);
 				}
 				break;
+			default:
+				printf("child work: DEFAULT\n");
+				break;
 		}
 	}
 	return SUCCESS;
