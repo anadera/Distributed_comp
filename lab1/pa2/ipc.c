@@ -20,7 +20,7 @@ int send(void * self, local_id dst, const Message * msg){
     return FAILURE;
   }
 	int fd = p->fd[dst][1];
-  printf("process id=%d send msg to dst=%d\n", p->id, fd);
+  printf("process id=%d send msg type=%d to dst=%d\n", p->id, msg.s_header.s_type, fd);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
 	int status = write(fd, msg, size);
   return status > 0 ? SUCCESS : FAILURE;
