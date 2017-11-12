@@ -1,7 +1,6 @@
-#include "lab2.h"
-
 #define _GNU_SOURCE
 #include <fcntl.h>
+#include "lab2.h"
 /*
 size - number of pipes,
 array - point on array of file descriptors
