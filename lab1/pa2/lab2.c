@@ -137,7 +137,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 	memset(&msg, 0, sizeof msg);
 	balance_t fin_balance;
 	printf("start child_work\n");
-	while (receive_any((void *)p, &msg) = 0){
+	while (receive_any((void *)p, &msg) == 0){
 		printf("WHILE ITERATION\n");
 		//int status = receive_any((void *)p, &msg);
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
