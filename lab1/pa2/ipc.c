@@ -14,15 +14,16 @@
 
 int send(void * self, local_id dst, const Message * msg){
 	PROCESS *p = (PROCESS*)self;
+  int des;
 	//int count = strlen(msg);
   if (p->id == dst){
     perror("send:src=dst\n");
     return FAILURE;
   }
-	int fd = p->fd[dst][1];
-  printf("process id=%d send msg type=%d to dst=%d\n", p->id, msg->s_header.s_type, fd);
+	des = p->fd[dst][1];
+  printf("process id=%d send msg type=%d to dst=%d\n", p->id, msg->s_header.s_type, des);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
-	int status = write(fd, msg, size);
+	int status = write(des, msg, size);
   return status > 0 ? SUCCESS : FAILURE;
 }
 
@@ -88,11 +89,11 @@ int receive_any(void * self, Message * msg){
   int des = 0;
   int read_bytes = 0;
   int i;
-  while(1){
+  //while(1){
     for (i=0; i<=size; i++){
       printf("receive_any: i=%d id=%d\n", i, p->id);
       des=p->fd[i][0];
-      if (des == 0 || des == NULL)
+      if (des == 0)
         continue;
       printf("receive_any: des=%d id=%d\n", des, p->id);
       read_bytes = read(des,buff, MAX_MESSAGE_LEN);
@@ -103,7 +104,7 @@ int receive_any(void * self, Message * msg){
       else
         continue;
     }
-    usleep(10000);
-  }
+    //usleep(10000);
+  //}
   return FAILURE;
 }
