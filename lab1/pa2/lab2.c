@@ -143,7 +143,7 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 		if (status != 0) {
 			printf ("child %d does not receive any msg\n", self);
 			return FAILURE;
-		}		
+		}
 		printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
@@ -151,12 +151,11 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
 					set_balance(h, -(order.s_amount));
-
-					printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
+					printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 				}
 				else {
 					msg.s_header = (MessageHeader) {
@@ -166,11 +165,11 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						.s_local_time = get_physical_time()
 					};
 					set_balance(h, order.s_amount);
-
 					if (send(p,0, &msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
 					}
+					printf("%d: process %d send TRANSFER=%d to 0\n", get_physical_time(),self,msg.s_header.s_type);
 				}
 				break;
 			case (STOP):
