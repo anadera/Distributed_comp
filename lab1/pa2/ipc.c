@@ -21,7 +21,7 @@ int send(void * self, local_id dst, const Message * msg){
     return FAILURE;
   }
 	des = p->fd[dst][1];
-  printf("process id=%d send msg type=%d to dst=%d\n", p->id, msg->s_header.s_type, des);
+  printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, des);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
 	int status = write(des, msg, size);
   return status > 0 ? SUCCESS : FAILURE;
