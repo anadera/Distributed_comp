@@ -94,7 +94,7 @@ int parent_after_done(PROCESS* p){
 	int self = p->id;
 	int num = p->x;
 	AllHistory all = { 0 };
-	for (int i=0; i<num; i++){
+	for (int i=1; i<=num; i++){
 		if (i != self) {
 			while( (receive((void*)p,i,&msgIN) != 0) &&
 					(msgIN.s_header.s_type == BALANCE_HISTORY) ){
@@ -171,13 +171,15 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
 					}
-					printf("%d: process %d send TRANSFER=%d to 0\n", get_physical_time(),self,msg.s_header.s_type);
+					printf("%d: process %d send ACK=%d to 0\n", get_physical_time(),self,msg.s_header.s_type);
 				}
 				break;
 			case (STOP):
+				printf("%d: child id=%d receive STOP=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				fin_balance = h->s_history[h->s_history_len].s_balance;
 				create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
+				printf("%d: child id=%d send DONE=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				printf(log_done_fmt, get_physical_time(),self,fin_balance);
 				break;
 			case (DONE):
@@ -186,11 +188,12 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 					Message msgBH = { {0} };
 					create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
 					send(p, PARENT_ID,(const Message *)&msgBH);
+					printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msg.s_header.s_type);
 					exit(EXIT_SUCCESS);
 				}
 				break;
 			default:
-				printf("child work: DEFAULT\n");
+				printf("%d: child id=%d receive msg type=%d\n", get_physical_time(),self, msg.s_header.s_type);
 				break;
 		}
 		printf("switch is finished\n");
