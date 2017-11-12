@@ -17,6 +17,7 @@
 //#include <string.h> //strcmp
 #define SUCCESS  0
 #define FAILURE -1
+#define _GNU_SOURCE
 
 static const char * const p_fd_fmt =
     "%d: Process %1d (pid %5d, parent %5d) has READ fd %5d and WRITE fd %5d \n";
