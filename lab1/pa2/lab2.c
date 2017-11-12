@@ -214,11 +214,11 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, FILENAME * f, int* array
 				.s_history = { {0} }
 			};
 			set_fd(fds,p); //p.fd содержит полезную инф для чилдов
-			/*for (pid_t j=0;j<=size;j++){
+			for (pid_t j=0;j<=size;j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], f->pipes);
 			}
-			*/
+			
 			child_step(p, f, &bh, array);
 			for (int g=0; g<size; g++){
 				printf("fd=%d\n", p->fd[g][0]);
