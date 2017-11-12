@@ -83,7 +83,7 @@ int receive(void * self, local_id from, Message * msg){
 int receive_any(void * self, Message * msg){
 	PROCESS *p = (PROCESS*)self;
   char buff[MAX_MESSAGE_LEN];
-	int size = p->x;
+	int size = p->x*(p->x+1);
   while(1){
 	   for (int i=0; i<size; i++){
        if (i==p->id)
