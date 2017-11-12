@@ -5,7 +5,7 @@ array - point on array of file descriptors
 */
 void create_pipe(int size, int array[][2]){
 	for (int i=0; i<size; i++){
-		if (pipe(array[i]) == -1){
+		if (pipe2(array[i], O_NONBLOCK | O_DIRECT) == -1){
 			perror("create_pipe is failed");
 			exit (EXIT_FAILURE);
 		}
