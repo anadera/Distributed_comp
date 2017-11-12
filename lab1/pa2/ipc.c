@@ -89,7 +89,7 @@ int receive_any(void * self, Message * msg){
        if (i==p->id)
           continue;
        int fd = p->fd[i][0];
-       printf("receive_any: fd=%d\n", fd);
+       printf("receive_any: id=%d fd=%d\n", p->id ,fd);
        int read_bytes = read(fd,buff, MAX_MESSAGE_LEN);
        if (read_bytes>0){
          memcpy(msg,buff,read_bytes);
