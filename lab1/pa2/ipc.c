@@ -88,7 +88,7 @@ int receive_any(void * self, Message * msg){
   int fd = 0;
   int read_bytes = 0;
   int e;
-  while(1){
+
 	   for (e=0; e<=size; e++){
        printf("receive_any:while:for: i = %d \n", e);
        fd = p->fd[e][0];
@@ -102,7 +102,6 @@ int receive_any(void * self, Message * msg){
         break;
       }
 	   }
-     usleep(10000);
-   }
+
 	return FAILURE;
 }
