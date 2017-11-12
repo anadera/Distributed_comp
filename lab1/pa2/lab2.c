@@ -177,7 +177,16 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 			case (STOP):
 				printf("%d: child id=%d receive STOP=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				fin_balance = h->s_history[h->s_history_len].s_balance;
-				create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
+				msg.s_header = (MessageHeader) {
+					.s_magic = MESSAGE_MAGIC,
+					.s_payload_len = 0,
+					.s_type = DONE,
+					.s_local_time = get_physical_time()
+				};
+				char tmp[MAX_PAYLOAD_LEN] = "";
+				size_t buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
+				strncpy(msg.s_payload, tmp, buf);
+				//create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
 				printf("%d: child id=%d send DONE=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				printf(log_done_fmt, get_physical_time(),self,fin_balance);
@@ -186,7 +195,16 @@ int child_work(PROCESS* p, FILENAME* f, BalanceHistory* h){
 				done_counter++;
 				if (done_counter == num-1){
 					Message msgBH = { {0} };
-					create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
+					msgBH.s_header = (MessageHeader) {
+						.s_magic = MESSAGE_MAGIC,
+						.s_payload_len = buf,
+						.s_type = BALANCE_HISTORY,
+						.s_local_time = time
+					};
+					char tmp[MAX_PAYLOAD_LEN] = "";
+					buf = sizeof(BalanceHistory);
+					memcpy(msg.s_payload, &h, buf);
+					//create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
 					send(p, PARENT_ID,(const Message *)&msgBH);
 					printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msg.s_header.s_type);
 					exit(EXIT_SUCCESS);
