@@ -16,7 +16,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 	balance_t past_balance = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance;
   printf("past_balance = %d\n", past_balance);
 	timestamp_t gap_from = history->s_history_len;
-	for (timestamp_t t = gap_from; t<timeS; t++){
+	for (timestamp_t t = gap_from; t<time; t++){
 		history->s_history[t] = (BalanceState) {
 			.s_time = t,
 			.s_balance = past_balance,
