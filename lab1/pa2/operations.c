@@ -2,7 +2,7 @@
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
 	h->s_id = self;
-	h->s_history_len = 0;
+	h->s_history_len = 1;
 	h->s_history[0] = (BalanceState){
 		.s_balance = array[self-1],
 		.s_time = get_physical_time(),
@@ -15,7 +15,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 	timestamp_t time = get_physical_time();
 	balance_t past_balance = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance;
   printf("past_balance = %d\n", past_balance);
-	timestamp_t gap_from = history->s_history_len;
+	timestamp_t gap_from = history->s_history_len-1;
 	for (timestamp_t t = gap_from; t<=time; t++){
 		history->s_history[t] = (BalanceState) {
 			.s_time = t,
