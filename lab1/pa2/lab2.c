@@ -107,6 +107,7 @@ int parent_after_done(PROCESS* p){
 			all.s_history_len = all.s_history_len + 1;
 		}
 	}
+	printf("%d: parent receive all BH\n", get_physical_time());
 	print_history(&all);
 	return SUCCESS;
 }
