@@ -157,8 +157,8 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				//printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
-					fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
-					printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
+					//fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
+					//printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					set_balance(h, -(order.s_amount));
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
