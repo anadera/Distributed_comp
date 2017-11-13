@@ -8,6 +8,8 @@ void set_start_balance(local_id self, BalanceHistory* h, int* array){
 		.s_time = get_physical_time(),
 		.s_balance_pending_in = 0
 	};
+	printf("t=0 history->s.history[0].s_time=%d history->s.history[0].s_balance=%d\n", h->s_history[0].s_time,
+	h->s_history[0].s_balance);
   //printf("%d: set_start_balance: id = %d, balance = %d\n", get_physical_time(),h->s_id, h->s_history[0].s_balance);
 }
 
