@@ -97,7 +97,6 @@ int parent_work(PROCESS* p){
 
 int parent_after_done(PROCESS* p){
 	Message msgIN = { {0} };
-	int self = p->id;
 	int num = p->x;
 	AllHistory all = { 0 };
 	for (int i=1; i<=num; i++){
@@ -318,7 +317,7 @@ int main(int argc, char* argv[]){
 			}
 		}
 	}
-	int * array = &array_x;
+	//int *array = &array_x;
 	printf("main:size_x = %d\n", size_x);
 	/* for (int lol=0; lol<size_x; lol++){
 		printf("x[%d] = %d\n", lol,x[lol]);
@@ -333,7 +332,7 @@ int main(int argc, char* argv[]){
 	p->events = fopen(events_log, "w+");
 	p->pipes = fopen(pipes_log, "w+");
 	create_pipe(pipes_num,fds); //fds != p.fd  fds передаем set_fd   //works fine
-	int r = create_child(fds,pid,p,array);
+	int r = create_child(fds,pid,p,array_x);
 	fclose((FILE *)p->events);
 	fclose((FILE*)p->pipes);
 	free((void*)p);
