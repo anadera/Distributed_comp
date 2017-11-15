@@ -84,29 +84,28 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	PROCESS* p = (PROCESS*)parent_data;
 	Message msg;
-  Message msgIN = {{0}};
-  msg.s_header = (MessageHeader) {
-  	.s_magic = MESSAGE_MAGIC,
-  	.s_payload_len = sizeof(TransferOrder),
-  	.s_type = TRANSFER,
-  	.s_local_time = get_physical_time()
-  };
+  	Message msgIN = {{0}};
+  	msg.s_header = (MessageHeader) {
+  		.s_magic = MESSAGE_MAGIC,
+  		.s_payload_len = sizeof(TransferOrder),
+  		.s_type = TRANSFER,
+  		.s_local_time = get_physical_time()
+  	};
 	TransferOrder order = (TransferOrder){
 		.s_src = src,
 		.s_dst = dst,
 		.s_amount = amount
 	};
-  memcpy(msg.s_payload, &order, sizeof(TransferOrder));
+  	memcpy(msg.s_payload, &order, sizeof(TransferOrder));
   //printf("did memcpy\n");
 	send(p,src,&msg);
   //printf("send TRANSFER\n");
   //printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
 	//fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
 	//printf(log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
-	while (receive(p,dst,&msgIN)){
-		if (msgIN.s_header.s_type == ACK){
-      printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
-			break;
-    }
+	printf("wait for Ack\n");
+	while ((receive(p,dst,&msgIN) && msgIN.s_header.s_type == ACK) != 0){
+      		printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
 	}
+	printf("after WHILE ACK\n");
 }
