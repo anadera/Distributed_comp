@@ -36,6 +36,7 @@ void set_balance(BalanceHistory* history, balance_t amount){
 	history->s_history[time].s_time, history->s_history[time].s_balance);
   	//printf("new_balance = %d\n", history->s_history[time+1].s_balance);
 	history->s_history_len = time+1;
+	 printf("history->s_history_len = %d\n", history->s_history_len);
 }
 
 /*
@@ -80,11 +81,22 @@ int handle_transfer(PROCESS* p, Message * msgIN, BalanceHistory* h, FILENAME* f)
   return SUCCESS;
 }
 */
+int wait_for_ack(void * parent_data, local_id dst){
+        PROCESS* p = (PROCESS*)parent_data;
+        Message msg;
+        while (receive(p,dst,&msg)) {
+                if (msg.s_header.s_type == ACK) {
+                        printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
+                       return 0; 
+                }
+        }
+        return 1;
+}
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	PROCESS* p = (PROCESS*)parent_data;
+	int status = 1;
 	Message msg;
-  	Message msgIN = {{0}};
   	msg.s_header = (MessageHeader) {
   		.s_magic = MESSAGE_MAGIC,
   		.s_payload_len = sizeof(TransferOrder),
@@ -99,13 +111,24 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
   	memcpy(msg.s_payload, &order, sizeof(TransferOrder));
   //printf("did memcpy\n");
 	send(p,src,&msg);
+	while (1) {
+		status = wait_for_ack(p, dst);
+		if (status == 0)
+			break;
+	}
   //printf("send TRANSFER\n");
   //printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
 	//fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
 	//printf(log_transfer_out_fmt,get_physical_time(),p->id,amount,src);
-	printf("wait for Ack\n");
-	while ((receive(p,dst,&msgIN) && msgIN.s_header.s_type == ACK) != 0){
-      		printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
+/* 	printf("wait for Ack\n");
+	while (receive(p,dst,&msgIN)) {
+		printf("%d: process id=%d receive msg type=%d instead of ACK\n", get_physical_time(), getpid(), msgIN.s_header.s_type);
+		if (msgIN.s_header.s_type == ACK) {
+      			printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
+			break;
+		}
 	}
 	printf("after WHILE ACK\n");
+*/
 }
+

@@ -13,17 +13,18 @@
  const int block = 8192; //64 Kbit
 
 int send(void * self, local_id dst, const Message * msg){
-	PROCESS *p = (PROCESS*)self;
+  PROCESS *p = (PROCESS*)self;
   int des;
 	//int count = strlen(msg);
   if (p->id == dst){
     printf("send:src=dst id=%d dst=%d msg=%d\n",p->id, dst, msg->s_header.s_type);
     return FAILURE;
   }
-	des = p->fd[dst][1];
-  printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, des);
+  des = p->fd[dst][1];
+  printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, dst);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
-	int status = write(des, msg, size);
+  int status = write(des, msg, size);
+  printf("send:status=%d\n", status);
   return status > 0 ? SUCCESS : FAILURE;
 }
 
@@ -61,15 +62,18 @@ int send_multicast(void * self, const Message * msg){
 
 int receive(void * self, local_id from, Message * msg){
 	PROCESS *p = (PROCESS*)self;
-  if (p->id == from)
-    return FAILURE;
-	int fd = p->fd[from][0];
-	int read_bytes = read(fd, msg, sizeof(Message));
-	if (read_bytes < 0 && errno != EAGAIN) {
-        perror("receive:read");
-        return FAILURE;
-  }
-  return read_bytes > 0 ? SUCCESS : FAILURE;
+	char buff[MAX_MESSAGE_LEN];
+  	if (p->id == from)
+    		return FAILURE;
+	int des = p->fd[from][0];
+	int read_bytes = read(des, buff, MAX_MESSAGE_LEN);
+	if (read_bytes>0){
+		memcpy(msg,buff,read_bytes);
+		printf("%d: process id=%d receive msg type=%d from src=%d\n", get_physical_time(), p->id, msg->s_header.s_type, from);
+		return SUCCESS;
+	}
+	else
+		return FAILURE;
 }
 
 /** Receive a message from any process.

@@ -1,0 +1,8 @@
+1: process 2 (pid 34547, parent 34545) has STARTED with balance $20
+1: process 2 received all STARTED messages
+1: process 2 received $ 1 from process 1
+2: process 2 transferred $ 1 to process 1
+0: process 1 (pid 34546, parent 34545) has STARTED with balance $10
+1: process 1 received all STARTED messages
+1: process 1 transferred $ 1 to process 2
+2: process 1 received $ 1 from process 2

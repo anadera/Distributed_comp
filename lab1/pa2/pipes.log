@@ -1,0 +1,12 @@
+0: Process 2 (pid 34547, parent 34545) has READ fd    13 and WRITE fd     8 
+0: Process 2 (pid 34547, parent 34545) has READ fd    15 and WRITE fd    12 
+0: Process 2 (pid 34547, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 2 (pid 34547, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 2 (pid 34547, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 2 (pid 34547, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 1 (pid 34546, parent 34545) has READ fd     9 and WRITE fd     6 
+0: Process 1 (pid 34546, parent 34545) has READ fd    11 and WRITE fd    16 
+0: Process 1 (pid 34546, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 1 (pid 34546, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 1 (pid 34546, parent 34545) has READ fd     0 and WRITE fd     0 
+0: Process 1 (pid 34546, parent 34545) has READ fd     0 and WRITE fd     0 
