@@ -15,13 +15,12 @@
 int send(void * self, local_id dst, const Message * msg){
   PROCESS *p = (PROCESS*)self;
   int des;
-	//int count = strlen(msg);
   if (p->id == dst){
-    //printf("send:src=dst id=%d dst=%d msg=%d\n",p->id, dst, msg->s_header.s_type);
+    printf("send:src=dst id=%d dst=%d msg=%d\n",p->id, dst, msg->s_header.s_type);
     return FAILURE;
   }
   des = p->fd[dst][1];
-  //printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, dst);
+  printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, dst);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
   int status = write(des, msg, size);
   //printf("send:status=%d\n", status);
@@ -41,7 +40,6 @@ int send(void * self, local_id dst, const Message * msg){
 int send_multicast(void * self, const Message * msg){
 	int i;
 	PROCESS *p = (PROCESS*)self;
-	//int count = strlen(msg);
 	int size = p->x;
 	for (i=0; i<=size; i++){
 		send((void*)p,i,msg);
@@ -69,7 +67,7 @@ int receive(void * self, local_id from, Message * msg){
 	int read_bytes = read(des, buff, MAX_MESSAGE_LEN);
 	if (read_bytes>0){
 		memcpy(msg,buff,read_bytes);
-		//printf("%d: process id=%d receive msg type=%d from src=%d\n", get_physical_time(), p->id, msg->s_header.s_type, from);
+		printf("%d: process id=%d receive msg type=%d from src=%d\n", get_physical_time(), p->id, msg->s_header.s_type, from);
 		return SUCCESS;
 	}
 	else
@@ -95,20 +93,18 @@ int receive_any(void * self, Message * msg){
   int i;
   while(1){
     for (i=0; i<=size; i++){
-      //printf("receive_any: i=%d id=%d\n", i, p->id);
       des=p->fd[i][0];
       if (des == 0)
         continue;
-      //printf("receive_any: des=%d id=%d\n", des, p->id);
       read_bytes = read(des,buff, MAX_MESSAGE_LEN);
       if (read_bytes>0){
         memcpy(msg,buff,read_bytes);
+	printf("receive_any: i=%d des=%d id=%d\n", i, des, p->id);
         return SUCCESS;
       }
       else
         continue;
     }
-    //usleep(10000);
   }
   return FAILURE;
 }

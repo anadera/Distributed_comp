@@ -95,7 +95,6 @@ int wait_for_ack(void * parent_data, local_id dst){
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	PROCESS* p = (PROCESS*)parent_data;
-	int status = 1;
 	Message msg;
   	msg.s_header = (MessageHeader) {
   		.s_magic = MESSAGE_MAGIC,
@@ -111,11 +110,7 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
   	memcpy(msg.s_payload, &order, sizeof(TransferOrder));
   //printf("did memcpy\n");
 	send(p,src,&msg);
-	while (1) {
-		status = wait_for_ack(p, dst);
-		if (status == 0)
-			break;
-	}
+	while (wait_for_ack(p, dst) != 0); 
   //printf("send TRANSFER\n");
   //printf("%d: process id=%d send TRANSFER=%d to process=%d\n",get_physical_time(),getpid(),msg.s_header.s_type,src);
 	//fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,amount,src);

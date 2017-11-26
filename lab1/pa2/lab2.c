@@ -209,7 +209,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						exit(EXIT_FAILURE);
 					}
 					fprintf(p->events,log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
-					printf(log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_src);
+					printf(log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
 					//printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 				}
 				else  if (order.s_dst == self) {
