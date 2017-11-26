@@ -133,22 +133,18 @@ int parent_after_done(PROCESS* p){
 	while(1) {
 		while((receive_any((void*)p,&msgIN) == 0) && msgIN.s_header.s_type == BALANCE_HISTORY) {
 			memcpy((void*)&ah.s_history[status],&msgIN.s_payload,msgIN.s_header.s_payload_len);
-			for (int j=0; j<ah.s_history[status].s_history_len; j++) 
-				//printf ("BalanceHistory[%d].s_history[%d] s_balance = %d s_time = %d\n", status, j, ah.s_history[status].s_history[j].s_balance, ah.s_history[status].s_history[j].s_time);
+			//for (int j=0; j<ah.s_history[status].s_history_len; j++) 
+			//printf ("BalanceHistory[%d].s_history[%d] s_balance = %d s_time = %d\n",
+			//status, j, ah.s_history[status].s_history[j].s_balance, ah.s_history[status].s_history[j].s_time);
 			status++;	
 			break;
 		}
 		if (status == num)
 			break;
 	}	
-	//if (status == num) {
-		//printf("%d: parent receive all BH\n", get_physical_time());
 	preprocess_all_his(&ah);
 	print_history(&ah);
 	return SUCCESS;
-	//}
-	//else
-	//	return FAILURE;
 }
 
 void child_step(PROCESS* p, BalanceHistory* h, int * array){
@@ -205,14 +201,14 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				if (order.s_src == self){
 					//fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					//printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
-					set_balance(h, -(order.s_amount));
+					set_balance(h, -(order.s_amount), get_physical_time());
 					//msg.s_header.s_local_time = get_physical_time();
+					fprintf(p->events,log_transfer_out_fmt, get_physical_time(), p->id, order.s_amount,order.s_dst);
+					printf(log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
-					fprintf(p->events,log_transfer_out_fmt, msg.s_header.s_local_time,p->id,order.s_amount,order.s_dst);
-					printf(log_transfer_out_fmt,msg.s_header.s_local_time,p->id,order.s_amount,order.s_dst);
 					//printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 				}
 				else  if (order.s_dst == self) {
@@ -225,7 +221,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						.s_type = ACK,
 						.s_local_time = time
 					};
-					set_balance(h, order.s_amount);
+					set_balance(h, order.s_amount, msg.s_header.s_local_time);
 					if (send(p, PARENT_ID, (const Message *)&msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
