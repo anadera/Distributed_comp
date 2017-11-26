@@ -20,7 +20,6 @@ int parse_x(int argc, char** argv, int * array){
 		printf("parse_x:wrong key");
 		exit(-1);
     }
-    //int * array = (int*)malloc(sizeof(int)*d);
 	for (int i=0; i<d; i++){
 	    if (!
 	    ((array[i] = atoi(argv[i+3])) > 0) &&
@@ -53,7 +52,6 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 		case TRANSFER:
 			buf = sizeof(TransferOrder);
 			memcpy(msg.s_payload, body, buf);
-			//printf("create_msg:TRANSFER: %s size %d\n",&msg.s_payload, buf);
 			break;
 		case BALANCE_HISTORY:
 			buf = sizeof(BalanceHistory);

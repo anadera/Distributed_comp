@@ -15,7 +15,7 @@ void set_start_balance(local_id self, BalanceHistory* h, int* array){
 void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 	timestamp_t time = get_physical_time();
 	balance_t past_balance = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance;
-  printf("past_balance = %d\n", past_balance);
+  	// printf("past_balance = %d\n", past_balance);
 	timestamp_t from = history->s_history_len;
 	for (timestamp_t t = from; t<=time; t++){
 		history->s_history[t] = (BalanceState) {
@@ -23,26 +23,15 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 			.s_balance = past_balance,
 			.s_balance_pending_in = 0
 		};
-		printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t,
-		history->s_history[t].s_time, history->s_history[t].s_balance);
+		//printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t, history->s_history[t].s_time, history->s_history[t].s_balance);
 	}
-/*	
-	history->s_history[time+1] = (BalanceState) {
-		.s_time = time+1,
-		.s_balance = past_balance + amount,
-		.s_balance_pending_in = 0
-	};
-*/	
 	for (timestamp_t t = msg_time; t<=time; t++){
     		history->s_history[t].s_balance += amount;
-  	} 
-	printf("time=%d history->s.history[time].s_time=%d history->s.history[time].s_balance=%d\n", time,
-	history->s_history[time].s_time, history->s_history[time].s_balance);
-  	//printf("new_balance = %d\n", history->s_history[time+1].s_balance);
-	history->s_history_len = time+1;
-	 printf("history->s_history_len = %d\n", history->s_history_len);
-}
-
+  	}
+	history->s_history_len = time+1; 
+	// printf("time=%d history->s.history[time].s_time=%d history->s.history[time].s_balance=%d\n", time, history->s_history[time].s_time, history->s_history[time].s_balance);
+ 	// printf("history->s_history_len = %d\n", history->s_history_len);
+ }
 int wait_for_ack(void * parent_data, local_id dst){
         PROCESS* p = (PROCESS*)parent_data;
         Message msg;

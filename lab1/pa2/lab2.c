@@ -14,12 +14,6 @@ void create_pipe(int size, int array[][2]){
 	}
 }
 
-/*
-x - number of children,
-size - number of pipes,
-array - array of fds,
-p points on inf about read and write fds for every child
-*/
 void set_fd(int array[][2], PROCESS * p){
 	int i;
 	int skip = 0;
@@ -77,22 +71,15 @@ int parent_step(PROCESS* p, int type){
 			break;
 	}
 
-//	if (status == num) {
-		printf(fmt, get_physical_time(), p->id);
-		fprintf(des, fmt, get_physical_time(), p->id);
-		return SUCCESS;
-//	}
-//	else
-//		return FAILURE;
+	printf(fmt, get_physical_time(), p->id);
+	fprintf(des, fmt, get_physical_time(), p->id);
+	return SUCCESS;
 }
 
 int parent_work(PROCESS* p){
 	Message msg = { {0} };
-	//int self = p->id;
 	int num = p->x;
-	//printf("%d: call bank_robbery, self=%d, num=%d\n", get_physical_time(), self, num);
 	bank_robbery((void *)p, num);
-	//create_msg(msg, STOP, NULL, self,0);
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
 		.s_payload_len = 0,
@@ -100,7 +87,6 @@ int parent_work(PROCESS* p){
 		.s_local_time = get_physical_time()
 	};
 	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
-	//printf("%d: process %d send STOP\n", get_physical_time(), self);
 	return SUCCESS;
 }
 
@@ -129,13 +115,9 @@ int parent_after_done(PROCESS* p){
 	AllHistory ah;
 	memset(&ah, 0, sizeof(AllHistory));
 	ah.s_history_len = num;
-	//preprocess_all_his(&ah);
 	while(1) {
 		while((receive_any((void*)p,&msgIN) == 0) && msgIN.s_header.s_type == BALANCE_HISTORY) {
 			memcpy((void*)&ah.s_history[status],&msgIN.s_payload,msgIN.s_header.s_payload_len);
-			//for (int j=0; j<ah.s_history[status].s_history_len; j++) 
-			//printf ("BalanceHistory[%d].s_history[%d] s_balance = %d s_time = %d\n",
-			//status, j, ah.s_history[status].s_history[j].s_balance, ah.s_history[status].s_history[j].s_time);
 			status++;	
 			break;
 		}
@@ -156,7 +138,6 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	FILE* des = p->events;
 	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
-	//printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
@@ -184,23 +165,17 @@ int child_work(PROCESS* p, BalanceHistory* h){
 	int status;
 	int time;
 	char tmp[MAX_PAYLOAD_LEN] = "";
-	//printf("start child_work\n");
 	while (1){
-		//printf("WHILE ITERATION\n");
 		status = receive_any((void *)p, &msg);
 		if (status != 0) {
 			printf ("child %d does not receive any msg\n", self);
 			return FAILURE;
 		}
-		//printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
 				printf("TRANSFER: time = %d\n",  get_physical_time());
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
-				//printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
-					//fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
-					//printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					set_balance(h, -(order.s_amount), get_physical_time());
 					msg.s_header.s_local_time = get_physical_time();
 					fprintf(p->events,log_transfer_out_fmt, msg.s_header.s_local_time, p->id, order.s_amount,order.s_dst);
@@ -209,19 +184,18 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
-					//printf("%d: process %d send TRANSFER=%d to %d\n", get_physical_time(),self,msg.s_header.s_type, order.s_dst);
 				}
 				else  if (order.s_dst == self) {
 					time = get_physical_time();
 					fprintf(p->events,log_transfer_in_fmt,time,p->id,order.s_amount,order.s_src);
 					printf(log_transfer_in_fmt,time,p->id,order.s_amount,order.s_src);
+					set_balance(h, order.s_amount, msg.s_header.s_local_time);
 					msg.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = 0,
 						.s_type = ACK,
 						.s_local_time = time
 					};
-					set_balance(h, order.s_amount, msg.s_header.s_local_time);
 					if (send(p, PARENT_ID, (const Message *)&msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
@@ -232,7 +206,6 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				}
 				break;
 			case (STOP):
-				//printf("%d: child id=%d receive STOP=%d\n", get_physical_time(),self,msg.s_header.s_type);
 				done_counter++;
 				fin_balance = h->s_history[h->s_history_len-1].s_balance;
 				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
@@ -243,10 +216,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 					.s_local_time = get_physical_time()
 				};
 				strncpy(msg.s_payload, tmp, buf);
-				//create_msg(msg, DONE,(char *)log_done_fmt, self, fin_balance);
 				send_multicast((void*)p, (const Message *)&msg);
-				//printf("%d: child id=%d send DONE=%d\n", get_physical_time(),self,msg.s_header.s_type);
-				//printf(log_done_fmt, get_physical_time(),self,fin_balance);
 				break;
 			case (DONE):
 				done_counter++;
@@ -260,29 +230,19 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						.s_local_time = get_physical_time()
 					};
 					memcpy(msgBH.s_payload, h, msgBH.s_header.s_payload_len);
-					//create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
 					send(p, PARENT_ID,(const Message *)&msgBH);
-					//printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msgBH.s_header.s_type);
 					exit(EXIT_SUCCESS);
 				}
 				break;
 			default:
-				//printf("%d: child id=%d receive msg type=%d\n", get_physical_time(),self, msg.s_header.s_type);
 				break;
 		}
-		//printf("switch is finished\n");
 	}
 	return SUCCESS;
 }
 
-/*
-size - number of children
-fds - point on array with children pids
-array - point on array of start_balance
-*/
 int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 	int size = p->x;
-	//printf("create_Child_size: %d\n", size);
 	int id = 0;
 	for (pid_t i=0; i<size; i++){
 		if ((pids[i] = fork() ) == 0) {
@@ -298,7 +258,6 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 			for (pid_t j=0;j<=size*(size+1);j++){
 				if (j==id) continue;
 				log_pipes(p_fd_fmt,p->id,p->fd[j][0],p->fd[j][1], p->pipes);
-				//printf("array[%d][0]=%d array[%d][1]=%d\n", j, p->fd[j][0], j, p->fd[j][1]);
 			}
 
 			child_step(p, &bh, array);
@@ -319,7 +278,6 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 	for(pid_t i=0;i<=size;i++){
 		if (i==id) continue;
 		log_pipes(p_fd_fmt,p->id,p->fd[i][0],p->fd[i][1], p->pipes);
-		//printf("array[%d][0]=%d array[%d][1]=%d\n", i, p->fd[i][0], i, p->fd[i][1]);
 	}
 	//step 1
 	if (parent_step(p, STARTED) != 0)
@@ -363,11 +321,7 @@ int main(int argc, char* argv[]){
 			}
 		}
 	}
-	//int *array = &array_x;
 	printf("main:size_x = %d\n", size_x);
-	/* for (int lol=0; lol<size_x; lol++){
-		printf("x[%d] = %d\n", lol,x[lol]);
-	} */
 	pid_t* pid; //array of children' pids
 	pid = (pid_t *)malloc(sizeof(pid_t)*size_x);
 	pipes_num = size_x*(size_x+1);

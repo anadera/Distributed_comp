@@ -99,7 +99,7 @@ int receive_any(void * self, Message * msg){
       read_bytes = read(des,buff, MAX_MESSAGE_LEN);
       if (read_bytes>0){
         memcpy(msg,buff,read_bytes);
-	printf("receive_any: i=%d des=%d id=%d\n", i, des, p->id);
+	printf("%d receive_any: i=%d des=%d id=%d\n", get_physical_time(), i, des, p->id);
         return SUCCESS;
       }
       else
