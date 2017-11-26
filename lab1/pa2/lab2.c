@@ -254,6 +254,8 @@ int child_work(PROCESS* p, BalanceHistory* h){
 			case (DONE):
 				done_counter++;
 				if (done_counter == num){
+					printf(log_received_all_done_fmt, get_physical_time(), p->id);
+					fprintf(p->events, log_received_all_done_fmt, get_physical_time(), p->id);
 					msgBH.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = sizeof *h - (MAX_T + 1 - h->s_history_len) * sizeof *h->s_history,
