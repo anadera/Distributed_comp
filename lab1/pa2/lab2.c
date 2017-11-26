@@ -198,6 +198,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 		//printf("%d: process %d receive MSG type=%d\n", get_physical_time(),self,msg.s_header.s_type);
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
+				printf("TRANSFER: time = %d\n",  get_physical_time());
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				//printf("%d: child id=%d receive TRANSFER src=%d dst=%d\n", get_physical_time(),self,order.s_src,order.s_dst);
 				if (order.s_src == self){
@@ -221,7 +222,9 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						.s_type = ACK,
 						.s_local_time = get_physical_time()
 					};
+					printf("TRANSFER to child: time = %d\n", msg.s_header.s_local_time);
 					set_balance(h, order.s_amount);
+					printf("TRANSFER: time = %d\n",  get_physical_time());
 					if (send(p, PARENT_ID, (const Message *)&msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
