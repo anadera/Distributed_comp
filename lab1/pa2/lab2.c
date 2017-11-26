@@ -78,8 +78,8 @@ int parent_step(PROCESS* p, int type){
 	}
 
 //	if (status == num) {
-		printf(fmt, get_physical_time(), getpid());
-		fprintf(des, fmt, get_physical_time(), getpid());
+		printf(fmt, get_physical_time(), p->id);
+		fprintf(des, fmt, get_physical_time(), p->id);
 		return SUCCESS;
 //	}
 //	else
