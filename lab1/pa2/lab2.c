@@ -104,6 +104,24 @@ int parent_work(PROCESS* p){
 	return SUCCESS;
 }
 
+void preprocess_all_his(AllHistory * ah){
+  int max_time=0;
+  for(uint8_t i=0; i < ah->s_history_len; ++i)
+    max_time = max_time >= ah->s_history[i].s_history_len ? max_time : ah->s_history[i].s_history_len;
+  for(uint8_t i=0; i < ah->s_history_len; ++i)
+  {    
+    for (uint8_t j = 1; j < max_time; ++j)
+    {
+      if ( ah->s_history[i].s_history[j].s_time == 0 ){
+        ah->s_history[i].s_history[j].s_time = j;
+        ah->s_history[i].s_history[j].s_balance += ah->s_history[i].s_history[j-1].s_balance;
+      }
+    }
+    ah->s_history[i].s_history_len=max_time;
+  }
+}
+
+
 int parent_after_done(PROCESS* p){
 	Message msgIN = { {0} };
 	int num = p->x;
@@ -111,6 +129,7 @@ int parent_after_done(PROCESS* p){
 	AllHistory ah;
 	memset(&ah, 0, sizeof(AllHistory));
 	ah.s_history_len = num;
+	//preprocess_all_his(&ah);
 	while(1) {
 		while((receive_any((void*)p,&msgIN) == 0) && msgIN.s_header.s_type == BALANCE_HISTORY) {
 			memcpy((void*)&ah.s_history[status],&msgIN.s_payload,msgIN.s_header.s_payload_len);
@@ -124,8 +143,9 @@ int parent_after_done(PROCESS* p){
 	}	
 	//if (status == num) {
 		//printf("%d: parent receive all BH\n", get_physical_time());
-		print_history(&ah);
-		return SUCCESS;
+	preprocess_all_his(&ah);
+	print_history(&ah);
+	return SUCCESS;
 	//}
 	//else
 	//	return FAILURE;
@@ -216,6 +236,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				break;
 			case (STOP):
 				//printf("%d: child id=%d receive STOP=%d\n", get_physical_time(),self,msg.s_header.s_type);
+				done_counter++;
 				fin_balance = h->s_history[h->s_history_len-1].s_balance;
 				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
 				msg.s_header = (MessageHeader) {
@@ -232,7 +253,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				break;
 			case (DONE):
 				done_counter++;
-				if (done_counter == num-1){
+				if (done_counter == num){
 					msgBH.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = sizeof *h - (MAX_T + 1 - h->s_history_len) * sizeof *h->s_history,
