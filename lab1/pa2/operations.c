@@ -86,7 +86,7 @@ int wait_for_ack(void * parent_data, local_id dst){
         Message msg;
         while (receive(p,dst,&msg)) {
                 if (msg.s_header.s_type == ACK) {
-                        printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
+                       // printf("%d: process id=%d receive ACK from process=%d\n",get_physical_time(),getpid(),dst);
                        return 0; 
                 }
         }
