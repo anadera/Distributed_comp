@@ -202,9 +202,9 @@ int child_work(PROCESS* p, BalanceHistory* h){
 					//fprintf(p->events,log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					//printf(log_transfer_in_fmt,get_physical_time(),p->id,order.s_amount,0);
 					set_balance(h, -(order.s_amount), get_physical_time());
-					//msg.s_header.s_local_time = get_physical_time();
-					fprintf(p->events,log_transfer_out_fmt, get_physical_time(), p->id, order.s_amount,order.s_dst);
-					printf(log_transfer_out_fmt,get_physical_time(),p->id,order.s_amount,order.s_dst);
+					msg.s_header.s_local_time = get_physical_time();
+					fprintf(p->events,log_transfer_out_fmt, msg.s_header.s_local_time, p->id, order.s_amount,order.s_dst);
+					printf(log_transfer_out_fmt,msg.s_header.s_local_time,p->id,order.s_amount,order.s_dst);
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
