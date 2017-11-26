@@ -88,9 +88,9 @@ int parent_step(PROCESS* p, int type){
 
 int parent_work(PROCESS* p){
 	Message msg = { {0} };
-	int self = p->id;
+	//int self = p->id;
 	int num = p->x;
-	printf("%d: call bank_robbery, self=%d, num=%d\n", get_physical_time(), self, num);
+	//printf("%d: call bank_robbery, self=%d, num=%d\n", get_physical_time(), self, num);
 	bank_robbery((void *)p, num);
 	//create_msg(msg, STOP, NULL, self,0);
 	msg.s_header = (MessageHeader) {
@@ -110,12 +110,12 @@ int parent_after_done(PROCESS* p){
 	int status = 0;
 	AllHistory ah;
 	memset(&ah, 0, sizeof(AllHistory));
-	ah.s_history_len = num-1;
+	ah.s_history_len = num;
 	while(1) {
 		while((receive_any((void*)p,&msgIN) == 0) && msgIN.s_header.s_type == BALANCE_HISTORY) {
 			memcpy((void*)&ah.s_history[status],&msgIN.s_payload,msgIN.s_header.s_payload_len);
 			for (int j=0; j<ah.s_history[status].s_history_len; j++) 
-				printf ("BalanceHistory[%d].s_history[%d] s_balance = %d s_time = %d\n", status, j, ah.s_history[status].s_history[j].s_balance, ah.s_history[status].s_history[j].s_time);
+				//printf ("BalanceHistory[%d].s_history[%d] s_balance = %d s_time = %d\n", status, j, ah.s_history[status].s_history[j].s_balance, ah.s_history[status].s_history[j].s_time);
 			status++;	
 			break;
 		}
@@ -123,7 +123,7 @@ int parent_after_done(PROCESS* p){
 			break;
 	}	
 	//if (status == num) {
-		printf("%d: parent receive all BH\n", get_physical_time());
+		//printf("%d: parent receive all BH\n", get_physical_time());
 		print_history(&ah);
 		return SUCCESS;
 	//}
@@ -140,7 +140,7 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	FILE* des = p->events;
 	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
-	printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
+	//printf("%d: process %d has start_balance %d\n", get_physical_time(), self, start_balance);
 	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
@@ -232,15 +232,14 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				break;
 			case (DONE):
 				done_counter++;
-				buf = sizeof(BalanceHistory);
 				if (done_counter == num-1){
 					msgBH.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
-						.s_payload_len = buf,
+						.s_payload_len = sizeof *h - (MAX_T + 1 - h->s_history_len) * sizeof *h->s_history,
 						.s_type = BALANCE_HISTORY,
 						.s_local_time = get_physical_time()
 					};
-					memcpy(msgBH.s_payload, &h, buf);
+					memcpy(msgBH.s_payload, h, msgBH.s_header.s_payload_len);
 					//create_msg(msgBH,BALANCE_HISTORY,(char *)&h,self,0);
 					send(p, PARENT_ID,(const Message *)&msgBH);
 					//printf("%d: child id=%d send BALANCE_HISTORY=%d\n", get_physical_time(),self,msgBH.s_header.s_type);
