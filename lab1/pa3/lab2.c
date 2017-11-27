@@ -159,18 +159,17 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 }
 
 int child_work(PROCESS* p, BalanceHistory* h){
+	Message msg, msgBH;
+	TransferOrder order;
+	int status;
+	int done_counter = 0;
+	timestamp_t time;
+	balance_t fin_balance;
+	size_t buf;
 	local_id self = p->id;
 	int num = p->x;
-	int done_counter = 0;
-	Message msg;
-	Message msgBH;
-	size_t buf;
-	TransferOrder order;
 	memset(&msg, 0, sizeof(msg));
 	memset(&msgBH, 0, sizeof(msgBH));
-	balance_t fin_balance;
-	int status;
-	timestamp_t time;
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	while (1){
 		status = receive_any((void *)p, &msg);
@@ -305,7 +304,6 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p, int* array){
 int main(int argc, char* argv[]){
 	PROCESS * p;
 	int pipes_num; //number of pipes
-
 	int size_x = atoi(argv[2]);
 	int array_x[size_x];
 	if (argc <4){
@@ -318,7 +316,7 @@ int main(int argc, char* argv[]){
 	}
 	else {
 		for (int i=3; i<argc; i++){
-			if (atoi(argv[i]) <1 || atoi(argv[i])> 99)			{
+			if (atoi(argv[i]) <1 || atoi(argv[i])> 99) {
 				perror("wrong S, S: [1;99]");
 				exit(EXIT_FAILURE);
 			}
