@@ -27,7 +27,8 @@ void set_start_balance(local_id self, BalanceHistory* h, int* array){
 }
 
 void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
-	timestamp_t time = get_physical_time();
+	//timestamp_t time = get_physical_time();
+	timestamp_t time = get_lamport_time();
 	balance_t past_balance = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance;
   	// printf("past_balance = %d\n", past_balance);
 	timestamp_t from = history->s_history_len;
@@ -49,9 +50,12 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 int wait_for_ack(void * parent_data, local_id dst){
         PROCESS* p = (PROCESS*)parent_data;
         Message msg;
+	timestamp_t time;
         while (1) {
 		int status = receive(p,dst,&msg);
                 if ( status == 0 && msg.s_header.s_type == ACK) {
+			set_time(msg.s_header.s_time);
+			update_time();	
                 	break; 
                 }
 		else
@@ -61,13 +65,16 @@ int wait_for_ack(void * parent_data, local_id dst){
 }
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
-	PROCESS* p = (PROCESS*)parent_data;
 	Message msg;
+	timestamp_t time;
+	PROCESS* p = (PROCESS*)parent_data;
+	update_time();
+	time = get_lamport_time();
   	msg.s_header = (MessageHeader) {
   		.s_magic = MESSAGE_MAGIC,
   		.s_payload_len = sizeof(TransferOrder),
   		.s_type = TRANSFER,
-  		.s_local_time = get_physical_time()
+  		.s_local_time = time
   	};
 	TransferOrder order = (TransferOrder){
 		.s_src = src,
