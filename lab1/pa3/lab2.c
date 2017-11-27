@@ -70,7 +70,6 @@ int parent_step(PROCESS* p, int type){
 			fmt = wrong_argument;
 			break;
 	}
-
 	printf(fmt, get_physical_time(), p->id);
 	fprintf(des, fmt, get_physical_time(), p->id);
 	return SUCCESS;
@@ -148,14 +147,12 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
                 .s_type = STARTED,
                 .s_local_time = time
         };
-	//create_msg(msg,STARTED,(char *)log_started_fmt, self,0, get_physical_time());
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
 	fprintf(des, log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
 	for (int i=1; i<=num; i++){
 		if (i != self && i !=0 )
-			while((receive((void*)p,i,&msgIN) &&
-							msgIN.s_header.s_type == STARTED) != 0);
+			while((receive((void*)p,i,&msgIN) && msgIN.s_header.s_type == STARTED) != 0);
 	}
 	printf(log_received_all_started_fmt,get_physical_time(),self);
 	fprintf(des, log_received_all_started_fmt,get_physical_time(),self);
@@ -173,33 +170,32 @@ int child_work(PROCESS* p, BalanceHistory* h){
 	memset(&msgBH, 0, sizeof(msgBH));
 	balance_t fin_balance;
 	int status;
-	int time;
+	timestamp_t time;
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	while (1){
 		status = receive_any((void *)p, &msg);
+		time = get_physical_time();
 		if (status != 0) {
 			printf ("child %d does not receive any msg\n", self);
 			return FAILURE;
 		}
 		switch (msg.s_header.s_type){
 			case (TRANSFER):
-				printf("TRANSFER: time = %d\n",  get_physical_time());
 				memcpy(&order, msg.s_payload, msg.s_header.s_payload_len);
 				if (order.s_src == self){
-					set_balance(h, -(order.s_amount), get_physical_time());
-					msg.s_header.s_local_time = get_physical_time();
-					fprintf(p->events,log_transfer_out_fmt, msg.s_header.s_local_time, p->id, order.s_amount,order.s_dst);
-					printf(log_transfer_out_fmt,msg.s_header.s_local_time,p->id,order.s_amount,order.s_dst);
+					set_balance(h, -(order.s_amount), time);
+					msg.s_header.s_local_time = time;
+					fprintf(p->events,log_transfer_out_fmt, time, p->id, order.s_amount,order.s_dst);
+					printf(log_transfer_out_fmt,time,self,order.s_amount,order.s_dst);
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
 					}
 				}
 				else  if (order.s_dst == self) {
-					time = get_physical_time();
-					fprintf(p->events,log_transfer_in_fmt,time,p->id,order.s_amount,order.s_src);
-					printf(log_transfer_in_fmt,time,p->id,order.s_amount,order.s_src);
-					set_balance(h, order.s_amount, msg.s_header.s_local_time);
+					fprintf(p->events,log_transfer_in_fmt,time,self,order.s_amount,order.s_src);
+					printf(log_transfer_in_fmt,time,self,order.s_amount,order.s_src);
+					set_balance(h, order.s_amount, time);
 					msg.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = 0,
@@ -216,15 +212,14 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				}
 				break;
 			case (STOP):
-				time = get_physical_time();
 				done_counter++;
 				fin_balance = h->s_history[h->s_history_len-1].s_balance;
-				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
+				buf = sprintf(tmp, log_done_fmt, time, self, fin_balance);
 				msg.s_header = (MessageHeader) {
 					.s_magic = MESSAGE_MAGIC,
 					.s_payload_len = buf,
 					.s_type = DONE,
-					.s_local_time = get_physical_time()
+					.s_local_time = time
 				};
 				strncpy(msg.s_payload, tmp, buf);
 				send_multicast((void*)p, (const Message *)&msg);
@@ -232,13 +227,13 @@ int child_work(PROCESS* p, BalanceHistory* h){
 			case (DONE):
 				done_counter++;
 				if (done_counter == num){
-					printf(log_received_all_done_fmt, get_physical_time(), p->id);
-					fprintf(p->events, log_received_all_done_fmt, get_physical_time(), p->id);
+					printf(log_received_all_done_fmt, time, self);
+					fprintf(p->events, log_received_all_done_fmt, time, self);
 					msgBH.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = sizeof *h - (MAX_T + 1 - h->s_history_len) * sizeof *h->s_history,
 						.s_type = BALANCE_HISTORY,
-						.s_local_time = get_physical_time()
+						.s_local_time = time
 					};
 					memcpy(msgBH.s_payload, h, msgBH.s_header.s_payload_len);
 					send(p, PARENT_ID,(const Message *)&msgBH);
