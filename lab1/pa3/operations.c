@@ -1,5 +1,19 @@
 #include "lab2.h"
 
+static timestamp_t global_time = 0;
+
+timestamp_t get_lamport_time() {
+	return global_time;
+}
+
+void set_time(timestamp_t msg_time) {	
+	global_time = ( global_time >  msg_time ? global_time : msg_time );	
+}
+
+void update_time() {
+	global_time++;
+}
+
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
 	h->s_id = self;
 	h->s_history_len = 1;
