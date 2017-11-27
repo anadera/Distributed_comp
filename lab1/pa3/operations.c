@@ -35,12 +35,15 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 int wait_for_ack(void * parent_data, local_id dst){
         PROCESS* p = (PROCESS*)parent_data;
         Message msg;
-        while (receive(p,dst,&msg)) {
-                if (msg.s_header.s_type == ACK) {
-                       return 0; 
+        while (1) {
+		int status = receive(p,dst,&msg);
+                if ( status == 0 && msg.s_header.s_type == ACK) {
+                	break; 
                 }
+		else
+			continue;
         }
-        return 1;
+        return 0;
 }
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
@@ -59,6 +62,9 @@ void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	};
   	memcpy(msg.s_payload, &order, sizeof(TransferOrder));
 	send(p,src,&msg);
-	while (wait_for_ack(p, dst) != 0); 
+	if (wait_for_ack(p, dst) == 0) 
+		printf("transfer: ack is received\n");
+	else
+		printf("transfer: ack is NOT received\n");	
 }
 
