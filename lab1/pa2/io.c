@@ -36,10 +36,10 @@ int parse_x(int argc, char** argv, int * array){
 /*
 fill declared Message struct
 */
-void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance){
+/*
+void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance, timestamp_t time){
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	size_t buf = 0;
-	time_t time = get_physical_time();
 	switch (type){
 		case STARTED:
 			buf = sprintf(tmp, body, time, id, getpid(), getppid(), balance);
@@ -57,8 +57,11 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 			buf = sizeof(BalanceHistory);
 			memcpy(msg.s_payload, body, buf);
 			break;
+		case ACK:
+			buf = sprintf(tmp, body, time, id, getpid(), getppid(), balance);
+			strncpy(msg.s_payload, tmp, buf);
+			break;
 		default:
-			buf = 0;
 			strncpy(msg.s_payload, body, buf);
 			break;
 	}
@@ -69,7 +72,7 @@ void create_msg(Message msg, MessageType type, char * body, int id, balance_t ba
 		.s_local_time = time
 	};
 }
-
+*/
 /*
 log event to stdout and in file
 fmt - event_message

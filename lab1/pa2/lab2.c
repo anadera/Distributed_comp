@@ -136,9 +136,19 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	int self = p->id;
 	int num = p->x;
 	FILE* des = p->events;
+	char tmp[MAX_PAYLOAD_LEN] = "";
+	timestamp_t time = get_physical_time();
 	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
-	create_msg(msg,STARTED,(char *)log_started_fmt, self,0);
+	size_t buf = sprintf(tmp,log_started_fmt,time, self, getpid(), getppid(), start_balance);
+	strncpy(msg.s_payload, tmp, buf);
+	msg.s_header = (MessageHeader) {
+                .s_magic = MESSAGE_MAGIC,
+                .s_payload_len = buf,
+                .s_type = STARTED,
+                .s_local_time = time
+        };
+	//create_msg(msg,STARTED,(char *)log_started_fmt, self,0, get_physical_time());
 	send_multicast((void*)p, (const Message *)&msg);
 	printf(log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
 	fprintf(des, log_started_fmt,get_physical_time(),self, getpid(), getppid(), start_balance);
@@ -195,7 +205,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 						.s_payload_len = 0,
 						.s_type = ACK,
 						.s_local_time = time
-					};
+					};  
 					if (send(p, PARENT_ID, (const Message *)&msg) != 0){
 						perror("send ACK is failed");
 						exit(EXIT_FAILURE);
@@ -206,6 +216,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				}
 				break;
 			case (STOP):
+				time = get_physical_time();
 				done_counter++;
 				fin_balance = h->s_history[h->s_history_len-1].s_balance;
 				buf = sprintf(tmp, log_done_fmt, get_physical_time(), self, fin_balance);
