@@ -36,12 +36,13 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 		history->s_history[t] = (BalanceState) {
 			.s_time = t,
 			.s_balance = past_balance,
-			.s_balance_pending_in = 0
+			.s_balance_pending_in = amount
 		};
 		//printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t, history->s_history[t].s_time, history->s_history[t].s_balance);
 	}
 	for (timestamp_t t = msg_time; t<=time; t++){
     		history->s_history[t].s_balance += amount;
+		history->s_history[t].s_balance_pending_in = 0;
   	}
 	history->s_history_len = time+1; 
 	// printf("time=%d history->s.history[time].s_time=%d history->s.history[time].s_balance=%d\n", time, history->s_history[time].s_time, history->s_history[time].s_balance);
@@ -50,11 +51,10 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 int wait_for_ack(void * parent_data, local_id dst){
         PROCESS* p = (PROCESS*)parent_data;
         Message msg;
-	timestamp_t time;
         while (1) {
 		int status = receive(p,dst,&msg);
                 if ( status == 0 && msg.s_header.s_type == ACK) {
-			set_time(msg.s_header.s_time);
+			set_time(msg.s_header.s_local_time);
 			update_time();	
                 	break; 
                 }

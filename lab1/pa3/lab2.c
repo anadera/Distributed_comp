@@ -5,6 +5,7 @@
 size - number of pipes,
 array - point on array of file descriptors
 */
+
 void create_pipe(int size, int array[][2]){
 	for (int i=0; i<size; i++){
 		if (pipe2(array[i], O_NONBLOCK | O_DIRECT) == -1){
@@ -124,7 +125,7 @@ int parent_after_done(PROCESS* p){
 	ah.s_history_len = num;
 	while(1) {
 		while((receive_any((void*)p,&msgIN) == 0) && msgIN.s_header.s_type == BALANCE_HISTORY) {
-			set_time(msgIN.s_header.s_time);
+			set_time(msgIN.s_header.s_local_time);
 			update_time();
 			memcpy((void*)&ah.s_history[status],&msgIN.s_payload,msgIN.s_header.s_payload_len);
 			status++;	
@@ -165,7 +166,7 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	for (int i=1; i<=num; i++){
 		if (i != self && i !=0 ) {
 			while((receive((void*)p,i,&msgIN) && msgIN.s_header.s_type == STARTED) != 0);
-			set_time(msgIN.s_header.s_time);
+			set_time(msgIN.s_header.s_local_time);
 			update_time();
 		}
 	}
