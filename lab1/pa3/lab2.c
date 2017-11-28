@@ -48,7 +48,7 @@ void set_fd(int array[][2], PROCESS * p){
 
 int parent_step(PROCESS* p, int type){
 	static const char * fmt;
-	timestamp_t time;
+	//timestamp_t time;
 	int status = 0;
 	Message msg = { {0} };
 	int num = p->x;
@@ -58,7 +58,7 @@ int parent_step(PROCESS* p, int type){
 		while((receive_any((void*)p,&msg) == 0) && msg.s_header.s_type == type) {
 			set_time(msg.s_header.s_local_time);
 			update_time();
-			time = get_lamport_time();
+			//time = get_lamport_time();
 			status++;
 			break;
 		}
@@ -76,23 +76,23 @@ int parent_step(PROCESS* p, int type){
 			fmt = wrong_argument;
 			break;
 	}
-	printf(fmt, time, self);
-	fprintf(des, fmt, time, self);
+	printf(fmt, get_lamport_time(), self);
+	fprintf(des, fmt, get_lamport_time(), self);
 	return SUCCESS;
 }
 
 int parent_work(PROCESS* p){
-	timestamp_t time;
+	//timestamp_t time;
 	Message msg = { {0} };
 	int num = p->x;
 	bank_robbery((void *)p, num);
 	update_time();
-	time = get_lamport_time();
+	//time = get_lamport_time();
 	msg.s_header = (MessageHeader) {
 		.s_magic = MESSAGE_MAGIC,
 		.s_payload_len = 0,
 		.s_type = STOP,
-		.s_local_time = time
+		.s_local_time = get_lamport_time() 
 	};
 	send_multicast((void*)p, (const Message *)&msg); //send STOP to all childs
 	return SUCCESS;
@@ -149,20 +149,20 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 	char tmp[MAX_PAYLOAD_LEN] = "";
 	//timestamp_t time = get_physical_time();
 	update_time();
-	timestamp_t time = get_lamport_time();
+	//timestamp_t time = get_lamport_time();
 	set_start_balance(self, h, array);
 	start_balance = h->s_history[0].s_balance;
-	size_t buf = sprintf(tmp,log_started_fmt,time, self, getpid(), getppid(), start_balance);
+	size_t buf = sprintf(tmp,log_started_fmt,get_lamport_time(), self, getpid(), getppid(), start_balance);
 	strncpy(msg.s_payload, tmp, buf);
 	msg.s_header = (MessageHeader) {
                 .s_magic = MESSAGE_MAGIC,
                 .s_payload_len = buf,
                 .s_type = STARTED,
-                .s_local_time = time
+                .s_local_time = get_lamport_time()
         };
 	send_multicast((void*)p, (const Message *)&msg);
-	printf(log_started_fmt,time,self, getpid(), getppid(), start_balance);
-	fprintf(des, log_started_fmt,time,self, getpid(), getppid(), start_balance);
+	printf(log_started_fmt,get_lamport_time(),self, getpid(), getppid(), start_balance);
+	fprintf(des, log_started_fmt,get_lamport_time(),self, getpid(), getppid(), start_balance);
 	for (int i=1; i<=num; i++){
 		if (i != self && i !=0 ) {
 			while((receive((void*)p,i,&msgIN) && msgIN.s_header.s_type == STARTED) != 0);
@@ -170,9 +170,8 @@ void child_step(PROCESS* p, BalanceHistory* h, int * array){
 			update_time();
 		}
 	}
-	time = get_lamport_time();
-	printf(log_received_all_started_fmt,time,self);
-	fprintf(des, log_received_all_started_fmt,time,self);
+	printf(log_received_all_started_fmt,get_lamport_time(),self);
+	fprintf(des, log_received_all_started_fmt,get_lamport_time(),self);
 }
 
 int child_work(PROCESS* p, BalanceHistory* h){
@@ -180,7 +179,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 	TransferOrder order;
 	int status;
 	int done_counter = 0;
-	timestamp_t time;
+	//timestamp_t time;
 	balance_t fin_balance;
 	size_t buf;
 	local_id self = p->id;
@@ -193,7 +192,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 		//time = get_physical_time();
 		set_time(msg.s_header.s_local_time);
 		update_time();
-		time = get_lamport_time();
+		//time = get_lamport_time();
 		if (status != 0) {
 			printf ("child %d does not receive any msg\n", self);
 			return FAILURE;
@@ -204,11 +203,11 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				if (order.s_src == self){
 					set_time(msg.s_header.s_local_time);
 					update_time();
-					time = get_lamport_time();
-					set_balance(h, -(order.s_amount), time);
-					msg.s_header.s_local_time = time;
-					fprintf(p->events,log_transfer_out_fmt, time, p->id, order.s_amount,order.s_dst);
-					printf(log_transfer_out_fmt,time,self,order.s_amount,order.s_dst);
+					//time = get_lamport_time();
+					set_balance(h, -(order.s_amount), get_lamport_time());
+					msg.s_header.s_local_time = get_lamport_time();
+					fprintf(p->events,log_transfer_out_fmt, get_lamport_time(), self, order.s_amount,order.s_dst);
+					printf(log_transfer_out_fmt,get_lamport_time(),self,order.s_amount,order.s_dst);
 					if (send(p,order.s_dst,(const Message *)&msg) != 0){
 						perror("send TRANSFER is failed");
 						exit(EXIT_FAILURE);
@@ -217,15 +216,15 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				else  if (order.s_dst == self) {
 					set_time(msg.s_header.s_local_time);
 					update_time();
-					time = get_lamport_time();
-					fprintf(p->events,log_transfer_in_fmt,time,self,order.s_amount,order.s_src);
-					printf(log_transfer_in_fmt,time,self,order.s_amount,order.s_src);
-					set_balance(h, order.s_amount, time);
+					//time = get_lamport_time();
+					fprintf(p->events,log_transfer_in_fmt,get_lamport_time(),self,order.s_amount,order.s_src);
+					printf(log_transfer_in_fmt,get_lamport_time(),self,order.s_amount,order.s_src);
+					set_balance(h, order.s_amount, get_lamport_time());
 					msg.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = 0,
 						.s_type = ACK,
-						.s_local_time = time
+						.s_local_time = get_lamport_time() 
 					};  
 					if (send(p, PARENT_ID, (const Message *)&msg) != 0){
 						perror("send ACK is failed");
@@ -239,15 +238,15 @@ int child_work(PROCESS* p, BalanceHistory* h){
 			case (STOP):
 				set_time(msg.s_header.s_local_time);
 				update_time();
-				time = get_lamport_time();
+				//time = get_lamport_time();
 				done_counter++;
 				fin_balance = h->s_history[h->s_history_len-1].s_balance;
-				buf = sprintf(tmp, log_done_fmt, time, self, fin_balance);
+				buf = sprintf(tmp, log_done_fmt, get_lamport_time(), self, fin_balance);
 				msg.s_header = (MessageHeader) {
 					.s_magic = MESSAGE_MAGIC,
 					.s_payload_len = buf,
 					.s_type = DONE,
-					.s_local_time = time
+					.s_local_time = get_lamport_time() 
 				};
 				strncpy(msg.s_payload, tmp, buf);
 				send_multicast((void*)p, (const Message *)&msg);
@@ -257,14 +256,14 @@ int child_work(PROCESS* p, BalanceHistory* h){
 				if (done_counter == num){
 					set_time(msg.s_header.s_local_time);
 					update_time();
-					time = get_lamport_time();
-					printf(log_received_all_done_fmt, time, self);
-					fprintf(p->events, log_received_all_done_fmt, time, self);
+					//time = get_lamport_time();
+					printf(log_received_all_done_fmt, get_lamport_time(), self);
+					fprintf(p->events, log_received_all_done_fmt, get_lamport_time(), self);
 					msgBH.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = sizeof *h - (MAX_T + 1 - h->s_history_len) * sizeof *h->s_history,
 						.s_type = BALANCE_HISTORY,
-						.s_local_time = time
+						.s_local_time = get_lamport_time()
 					};
 					memcpy(msgBH.s_payload, h, msgBH.s_header.s_payload_len);
 					send(p, PARENT_ID,(const Message *)&msgBH);

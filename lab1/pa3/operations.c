@@ -11,7 +11,7 @@ void set_time(timestamp_t msg_time) {
 }
 
 void update_time() {
-	global_time++;
+	++global_time;
 }
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
@@ -40,10 +40,15 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 		};
 		//printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t, history->s_history[t].s_time, history->s_history[t].s_balance);
 	}
-	for (timestamp_t t = msg_time; t<=time; t++){
+	for (timestamp_t t = msg_time-1; t<=time; t++){
     		history->s_history[t].s_balance += amount;
 		history->s_history[t].s_balance_pending_in = 0;
   	}
+	/*
+	for (timestamp_t t = msg_time; t <= time; t++) {
+		history->s_history[t].s_balance_pending_in = amount;
+	}
+	*/
 	history->s_history_len = time+1; 
 	// printf("time=%d history->s.history[time].s_time=%d history->s.history[time].s_balance=%d\n", time, history->s_history[time].s_time, history->s_history[time].s_balance);
  	// printf("history->s_history_len = %d\n", history->s_history_len);
@@ -66,15 +71,15 @@ int wait_for_ack(void * parent_data, local_id dst){
 
 void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
 	Message msg;
-	timestamp_t time;
+	//timestamp_t time;
 	PROCESS* p = (PROCESS*)parent_data;
 	update_time();
-	time = get_lamport_time();
+	//time = get_lamport_time();
   	msg.s_header = (MessageHeader) {
   		.s_magic = MESSAGE_MAGIC,
   		.s_payload_len = sizeof(TransferOrder),
   		.s_type = TRANSFER,
-  		.s_local_time = time
+  		.s_local_time = get_lamport_time()
   	};
 	TransferOrder order = (TransferOrder){
 		.s_src = src,
