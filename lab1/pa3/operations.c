@@ -11,7 +11,7 @@ void set_time(timestamp_t msg_time) {
 }
 
 void update_time() {
-	++global_time;
+	global_time = global_time + 1;
 }
 
 void set_start_balance(local_id self, BalanceHistory* h, int* array){
@@ -40,7 +40,7 @@ void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time){
 		};
 		//printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t, history->s_history[t].s_time, history->s_history[t].s_balance);
 	}
-	for (timestamp_t t = msg_time-1; t<=time; t++){
+	for (timestamp_t t = msg_time; t<=time; t++){
     		history->s_history[t].s_balance += amount;
 		history->s_history[t].s_balance_pending_in = 0;
   	}

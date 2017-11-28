@@ -20,7 +20,7 @@ int send(void * self, local_id dst, const Message * msg){
     return FAILURE;
   }
   des = p->fd[dst][1];
-  printf("%d: process id=%d send msg type=%d to dst=%d\n", get_physical_time(), p->id, msg->s_header.s_type, dst);
+  printf("%d: process id=%d send msg type=%d with time=%d to dst=%d\n", get_lamport_time(), p->id, msg->s_header.s_type, msg->s_header.s_local_time, dst);
   size_t size = sizeof(msg->s_header) + msg->s_header.s_payload_len;
   int status = write(des, msg, size);
   //printf("send:status=%d\n", status);
@@ -67,7 +67,7 @@ int receive(void * self, local_id from, Message * msg){
 	int read_bytes = read(des, buff, MAX_MESSAGE_LEN);
 	if (read_bytes>0){
 		memcpy(msg,buff,read_bytes);
-		printf("%d: process id=%d receive msg type=%d from src=%d\n", get_physical_time(), p->id, msg->s_header.s_type, from);
+		printf("%d: process id=%d receive msg type=%d with time=%d from src=%d\n", get_lamport_time(), p->id, msg->s_header.s_type, msg->s_header.s_local_time, from);
 		return SUCCESS;
 	}
 	else
@@ -99,7 +99,7 @@ int receive_any(void * self, Message * msg){
       read_bytes = read(des,buff, MAX_MESSAGE_LEN);
       if (read_bytes>0){
         memcpy(msg,buff,read_bytes);
-	printf("%d receive_any: i=%d des=%d id=%d\n", get_physical_time(), i, des, p->id);
+	printf("%d receive_any: i=%d des=%d id=%d\n", get_lamport_time(), i, des, p->id);
         return SUCCESS;
       }
       else
