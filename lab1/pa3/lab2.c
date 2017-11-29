@@ -209,7 +209,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 					set_time(msg.s_header.s_local_time);
 					update_time();
 					//time = get_lamport_time();
-					set_balance(h, -(order.s_amount), get_lamport_time());
+					set_balance(h, -(order.s_amount), msg.s_header.s_local_time);
 					msg.s_header.s_local_time = get_lamport_time();
 					//fprintf(p->events,log_transfer_out_fmt, get_lamport_time(), self, order.s_amount,order.s_dst);
 					//printf(log_transfer_out_fmt,get_lamport_time(),self,order.s_amount,order.s_dst);
@@ -226,7 +226,7 @@ int child_work(PROCESS* p, BalanceHistory* h){
 					//time = get_lamport_time();
 					//fprintf(p->events,log_transfer_in_fmt,get_lamport_time(),self,order.s_amount,order.s_src);
 					//printf(log_transfer_in_fmt,get_lamport_time(),self,order.s_amount,order.s_src);
-					set_balance(h, order.s_amount, get_lamport_time());
+					set_balance(h, order.s_amount, msg.s_header.s_local_time);
 					msg.s_header = (MessageHeader) {
 						.s_magic = MESSAGE_MAGIC,
 						.s_payload_len = 0,

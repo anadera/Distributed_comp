@@ -38,7 +38,7 @@ void set_time(timestamp_t msg_time);
 void update_time();
 
 void set_start_balance(local_id self, BalanceHistory* h, int * array);
-void set_balance(BalanceHistory* history, balance_t amount, time_t msg_time);
+void set_balance(BalanceHistory* history, balance_t amount, timestamp_t msg_time);
 
 int parent_step(PROCESS* p, int type);
 int parent_work(PROCESS* p);
