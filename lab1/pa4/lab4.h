@@ -26,6 +26,7 @@ typedef struct p{
   FILE * pipes;
   int id;
   int x;
+  llist_t* queue;
   int fd[][2];
 } PROCESS;
 
@@ -35,13 +36,6 @@ void set_fd(int array[][2], PROCESS * p);
 timestamp_t get_lamport_time();
 void set_time(timestamp_t msg_time);
 void update_time();
-
-//void set_start_balance(local_id self, BalanceHistory* h, int * array);
-//void set_balance(BalanceHistory* history, balance_t amount, timestamp_t msg_time);
-
 int parent_step(PROCESS* p, int type);
-//int parent_work(PROCESS* p);
-//int parent_after_done(PROCESS* p);
 int child_step(PROCESS* p, int type);
-//int child_work(PROCESS* p, BalanceHistory* h);
 int create_child(int fds[][2], pid_t* pids, PROCESS* p);
