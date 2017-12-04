@@ -1,0 +1,274 @@
+execve("./a.out", ["./a.out", "-p", "2"], [/* 39 vars */]) = 0
+brk(0)                                  = 0x16d4000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec61000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("tls/x86_64/libruntime.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("tls/libruntime.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("x86_64/libruntime.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("libruntime.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\300\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=32587, ...}) = 0
+getcwd("/home/anzhelika.deryabina/Distributed_comp/lab1/pa4", 128) = 52
+mmap(NULL, 2118816, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f8d9e83b000
+mprotect(0x7f8d9e83f000, 2093056, PROT_NONE) = 0
+mmap(0x7f8d9ea3e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7f8d9ea3e000
+mmap(0x7f8d9ea40000, 1184, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ea40000
+close(3)                                = 0
+open("tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("libc.so.6", O_RDONLY|O_CLOEXEC)   = -1 ENOENT (No such file or directory)
+open("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/tls/x86_64", 0x7ffd0606e330) = -1 ENOENT (No such file or directory)
+open("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/tls", 0x7ffd0606e330) = -1 ENOENT (No such file or directory)
+open("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/x86_64", 0x7ffd0606e330) = -1 ENOENT (No such file or directory)
+open("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=59077, ...}) = 0
+mmap(NULL, 59077, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f8d9ec52000
+close(3)                                = 0
+open("/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\35\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2127336, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec51000
+mmap(NULL, 3940800, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f8d9e478000
+mprotect(0x7f8d9e630000, 2097152, PROT_NONE) = 0
+mmap(0x7f8d9e830000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b8000) = 0x7f8d9e830000
+mmap(0x7f8d9e836000, 16832, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f8d9e836000
+close(3)                                = 0
+open("tls/x86_64/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("tls/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("x86_64/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("libdl.so.2", O_RDONLY|O_CLOEXEC)  = -1 ENOENT (No such file or directory)
+open("/home/anzhelika.deryabina/Distributed_comp/lab1/pa2/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/lib64/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=19776, ...}) = 0
+mmap(NULL, 2109744, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f8d9e274000
+mprotect(0x7f8d9e276000, 2097152, PROT_NONE) = 0
+mmap(0x7f8d9e476000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f8d9e476000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec50000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec4e000
+arch_prctl(ARCH_SET_FS, 0x7f8d9ec4e740) = 0
+mprotect(0x7f8d9e830000, 16384, PROT_READ) = 0
+mprotect(0x7f8d9e476000, 4096, PROT_READ) = 0
+mprotect(0x7f8d9ea3e000, 4096, PROT_READ) = 0
+mprotect(0x602000, 4096, PROT_READ)     = 0
+mprotect(0x7f8d9ec62000, 4096, PROT_READ) = 0
+munmap(0x7f8d9ec52000, 59077)           = 0
+brk(0)                                  = 0x16d4000
+brk(0x16f5000)                          = 0x16f5000
+brk(0)                                  = 0x16f5000
+open("events.log", O_RDWR|O_CREAT|O_TRUNC, 0666) = 3
+open("pipes.log", O_RDWR|O_CREAT|O_TRUNC, 0666) = 4
+pipe2([5, 6], O_NONBLOCK)               = 0
+pipe2([7, 8], O_NONBLOCK)               = 0
+pipe2([9, 10], O_NONBLOCK)              = 0
+pipe2([11, 12], O_NONBLOCK)             = 0
+pipe2([13, 14], O_NONBLOCK)             = 0
+pipe2([15, 16], O_NONBLOCK)             = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 11), ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec60000
+write(1, "size = 2\n", 9)               = 9
+mmap(NULL, 8, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec5f000
+mmap(NULL, 8, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec5e000
+mmap(NULL, 2000, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec5d000
+clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f8d9ec4ea10) = 3770
+clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f8d9ec4ea10) = 3771
+close(6)                                = 0
+close(8)                                = 0
+close(9)                                = 0
+close(11)                               = 0
+close(12)                               = 0
+close(13)                               = 0
+close(15)                               = 0
+close(16)                               = 0
+getpid()                                = 3769
+getppid()                               = 3766
+write(1, "0: Process 0 (pid  3769, parent "..., 77) = 77
+getppid()                               = 3766
+fstat(4, {st_mode=S_IFREG|0644, st_size=0, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec5b000
+getppid()                               = 3766
+write(1, "0: Process 0 (pid  3769, parent "..., 77) = 77
+getppid()                               = 3766
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, "\257\257D\0\0\0\1\0", 8)       = 8
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, "1: process 1 (pid  3770, parent "..., 68) = 68
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, "\257\257D\0\0\0\1\0", 8)       = 8
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, "1: process 2 (pid  3771, parent "..., 68) = 68
+write(1, "3: process 0 received all STARTE"..., 43) = 43
+fstat(3, {st_mode=S_IFREG|0644, st_size=0, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8d9ec59000
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, "\257\257'\0\1\0\2\0", 8)       = 8
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, "2: process 1 has DONE with balan"..., 39) = 39
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(5, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(5, 0x7ffd0606ead0, 8)              = -1 EAGAIN (Resource temporarily unavailable)
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, "\257\257'\0\1\0\3\0", 8)       = 8
+fstat(7, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+read(7, "3: process 2 has DONE with balan"..., 39) = 39
+write(1, "5: process 0 received all DONE m"..., 40) = 40
+write(1, "BEFORE WAIT PID\n", 16)       = 16
+wait4(3770, NULL, 0, NULL)              = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
++++ killed by SIGINT +++

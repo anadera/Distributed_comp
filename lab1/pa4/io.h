@@ -1,0 +1,24 @@
+#pragma once
+
+#include "ipc.h"
+#include "pa2345.h"
+#include "lab4.h"
+#include <getopt.h>
+#include <stdlib.h> //atoi exit
+#include <string.h> //strcpy strcmp strlen
+#include <stdio.h> //perror printf fprintf
+#include <time.h> //time
+#include <unistd.h> //getpid getppid
+#include <sys/types.h> //getpid getppid
+
+char *optarg;
+
+typedef struct cmArgs{
+  int mutexIsUsed;
+  int x;
+} CM_ARGUMENTS;
+
+int parse_cm(int argc, char** argv, CM_ARGUMENTS* cmArgs);
+//int parse_x(int argc, char** argv, int * array);
+//void create_msg(Message msg, MessageType type, char * body, int id, balance_t balance, timestamp_t time);
+void log_pipes(const char * const fmt, int self, int fd_R, int fd_W, FILE* des);
