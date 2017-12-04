@@ -129,6 +129,15 @@ int child_step(PROCESS* p, int type){
 	return SUCCESS;
 }
 
+void child_work(PROCESS* p) {
+	int N = p->id * 5 ;
+	for (int i = 1; i <= N; i++){
+		//request_cs();
+		print(log_loop_operation_fmt);
+		//release_cs();
+	}
+}
+
 int create_child(int fds[][2], pid_t* pids, PROCESS* p){
 	int size = p->x;
 	printf ("size = %d\n",size);
@@ -147,10 +156,12 @@ int create_child(int fds[][2], pid_t* pids, PROCESS* p){
 				perror("child step STARTED\n");
 				return FAILURE;
 			}
+			child_work(p);
 			if ( child_step(p,DONE) != 0) {
 				perror("child step DONE\n");
 				return FAILURE;
 			}
+			exit(EXIT_SUCCESS);
 		}
 		else if (pids[i] < 0) {
 			/* Fail process */

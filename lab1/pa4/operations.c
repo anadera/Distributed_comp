@@ -13,91 +13,110 @@ void set_time(timestamp_t msg_time) {
 void update_time() {
 	global_time = global_time + 1;
 }
-/*
-void set_start_balance(local_id self, BalanceHistory* h, int* array){
-	h->s_id = self;
-	h->s_history_len = 1;
-	h->s_history[0] = (BalanceState){
-		.s_balance = array[self-1],
-		.s_time = 0, //get_physical_time(),
-		.s_balance_pending_in = 0
-	};
-	printf("t=0 history->s.history[0].s_time=%d history->s.history[0].s_balance=%d\n", h->s_history[0].s_time,
-	h->s_history[0].s_balance);
+
+typedef struct llist_t {
+Message* value;
+struct llist_t* next;
+struct llist_t* prev;
+} llist_t;
+
+llist_t* list_create ( Message* msg ) {
+	llist_t* t = malloc (sizeof(llist_t) );
+	t-> value = msg;
+	t-> next = NULL;
+	t-> previous = NULL;
+	return t;
 }
 
-void set_balance(BalanceHistory* history, balance_t amount, timestamp_t msg_time){
-	//timestamp_t time = get_physical_time();
-	timestamp_t time = get_lamport_time();
-	printf("SET BALANCE: msg=%d curr=%d\n", msg_time, time);
-	balance_t past_balance = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance;
-	balance_t past_pending = history->s_history_len == 0 ? 0 :  history->s_history[history->s_history_len-1].s_balance_pending_in;
-  	// printf("past_balance = %d\n", past_balance);
-	timestamp_t from = history->s_history_len;
-	for (timestamp_t t = from; t<=time; t++){
-		history->s_history[t] = (BalanceState) {
-			.s_time = t,
-			.s_balance = past_balance,
-			.s_balance_pending_in = past_pending 
-		};
-		//printf("t=%d history->s.history[t].s_time=%d history->s.history[t].s_balance=%d\n", t, history->s_history[t].s_time, history->s_history[t].s_balance);
+llist_t* list_add (Message* msg, llist_t* t) {
+	llist_t* temp = list_create(msg);
+	t-> next = temp;
+	temp->prev = t;
+	return temp;
+}
+
+llist_t* list_get (llist_t* t, Message* msg) {
+	llist_t* temp = (llist_t*)t;
+	llist_t* new;
+	if (temp->next == NULL && temp->prev == NULL)
+		return NULL;
+	while (temp != NULL) {
+		if (temp->next == NULL && temp->prev != NULL) {
+			if (temp->value == msg){
+				new = temp->prev;
+				new->next = NULL;
+				temp = new;
+			}
+			else
+				temp=temp->prev;
+		}
+		else if (temp->next != NULL && temp->prev == NULL) {
+			if (temp->value == msg){
+				new = temp->next;
+				new->prev = NULL;
+				temp = new;
+			}
+			else 
+				temp=temp->next;
+		}
+		else if (temp->next != NULL && temp->prev != NULL) {
+			if (temp->value == msg){
+				new = temp->prev;
+				new->next=temp->next;
+				new = temp->next;
+				new->prev = temp->prev;
+				temp = new;
+			}
+			else
+				temp = new;
+		}
 	}
-	for (timestamp_t t = msg_time; t<time; t++){
-		history->s_history[t] = (BalanceState) {
-			.s_time = t,
-    			.s_balance = past_balance,
-			.s_balance_pending_in = past_pending + ( amount > 0 ? amount : 0 )
-		};
-  	}
-	history->s_history[time] = (BalanceState) {
-		.s_time = time,
-		.s_balance = past_balance+amount,
-		.s_balance_pending_in = past_pending
-	};
-	
-	//history->s_history[time].s_balance_pending_in = history->s_history[from-1].s_balance_pending_in;
-	history->s_history_len = time+1; 
-	// printf("time=%d history->s.history[time].s_time=%d history->s.history[time].s_balance=%d\n", time, history->s_history[time].s_time, history->s_history[time].s_balance);
- 	// printf("history->s_history_len = %d\n", history->s_history_len);
- }
-int wait_for_ack(void * parent_data, local_id dst){
-        PROCESS* p = (PROCESS*)parent_data;
-        Message msg;
-        while (1) {
-		int status = receive(p,dst,&msg);
-                if ( status == 0 && msg.s_header.s_type == ACK) {
-			set_time(msg.s_header.s_local_time);
-			update_time();	
-                	break; 
-                }
-		else
-			continue;
-        }
-        return 0;
+	return temp;
 }
 
-void transfer(void * parent_data, local_id src, local_id dst, balance_t amount){
-	Message msg;
-	//timestamp_t time;
-	PROCESS* p = (PROCESS*)parent_data;
-	update_time();
-	//time = get_lamport_time();
-  	msg.s_header = (MessageHeader) {
-  		.s_magic = MESSAGE_MAGIC,
-  		.s_payload_len = sizeof(TransferOrder),
-  		.s_type = TRANSFER,
-  		.s_local_time = get_lamport_time()
-  	};
-	TransferOrder order = (TransferOrder){
-		.s_src = src,
-		.s_dst = dst,
-		.s_amount = amount
-	};
-  	memcpy(msg.s_payload, &order, sizeof(TransferOrder));
-	send(p,src,&msg);
-	if (wait_for_ack(p, dst) == 0) 
-		printf("transfer: ack is received\n");
-	else
-		printf("transfer: ack is NOT received\n");	
+int list_is_min_time (llist_t* t, timestamp_t time){
+	llist_t* temp = (llist_t*)t;
+	while (temp!=NULL){
+		if (time >= temp->value->s_header->s_local_time)
+			return 0;
+		temp=temp->prev;
+	}
+		return 1;
 }
-*/
+
+llist_t* list_node_at (size_t value, const llist_t* const t) { 
+	size_t i=0;
+	llist_t* temp = (llist_t*)t;
+	while (temp != NULL ) {
+		if (i == value ) return temp;
+		temp = temp->next; i++;
+		
+	}
+	return NULL;
+	
+}
+
+int request_cs(const void * self){
+	Message* msg;
+	PROCESS* p = (PROCESS*)self;
+	msg.s_header = (MessageHeader) {
+                .s_magic = MESSAGE_MAGIC,
+                .s_payload_len = 0,
+                .s_type = CS_REQUEST,
+                .s_local_time = get_lamport_time()
+        };
+	list_add_back(msg);
+	for (int i=1; i<=p->x; i++) {
+		if (i==p->id)
+			continue;
+		send(p,i,msg);
+	}
+	
+
+}
+
+int enter_cs(const void * self);
+	
+
+int release_cs(const void * self);
+
